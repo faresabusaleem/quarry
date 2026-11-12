@@ -40,6 +40,17 @@ def rescore(run_dir: Path, system: str, db: Database) -> tuple[int, int]:
     recs = [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
     changed = 0
     for rec in recs:
+        if system == "agent" and "failed_tools" not in rec and rec.get("trace"):
+            path_t = run_dir / "traces" / rec["trace"]
+            if path_t.exists():
+                evs = json.loads(path_t.read_text())["events"]
+                rec["failed_tools"] = [
+                    e["data"]["tool"]
+                    for e in evs
+                    if e["type"] == "tool_result" and not e["data"]["ok"]
+                ]
+        if system == "baseline" and "failed_tools" not in rec:
+            rec["failed_tools"] = ["run_sql"] if rec["outcome"] in ("sql_error", "blocked") else []
         item, g = items[rec["id"]], gold.get(rec["id"])
         if item.expect != "answer" or g is None:
             continue

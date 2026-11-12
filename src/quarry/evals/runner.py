@@ -128,6 +128,7 @@ def run_agent_item(agent: Agent, item: Item, gold: Gold | None, trace_dir: Path)
         and (r.data.get("data") or {}).get("blocked")
     ]
 
+    failed_tools = [e.data["tool"] for e in events if e.type == ev.TOOL_RESULT and not e.data["ok"]]
     outcome = done["status"]
     rec: dict[str, Any] = {
         "id": item.id,
@@ -142,6 +143,7 @@ def run_agent_item(agent: Agent, item: Item, gold: Gold | None, trace_dir: Path)
         "latency_ms": done["latency_ms"],
         "cost_usd": done["cost_usd"],
         "had_failure": done["had_failure"],
+        "failed_tools": failed_tools,
         "recovered": done["recovered"],
         "blocked_sql": blocked_sql,
         "trace": recorder.path.name if recorder.path else None,
@@ -227,6 +229,7 @@ def run_baseline_item(
         "latency_ms": round(r.latency_ms),
         "cost_usd": round(r.cost_usd, 6),
         "had_failure": not r.ok and r.action == "sql",
+        "failed_tools": ["run_sql"] if r.action == "sql" and not r.ok else [],
         "recovered": False,
         "blocked_sql": [r.sql] if r.blocked else [],
         "error": r.error,

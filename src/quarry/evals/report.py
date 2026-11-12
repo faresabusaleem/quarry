@@ -49,6 +49,7 @@ def metrics(recs: list[dict[str, Any]]) -> dict[str, Any]:
     refuse = [r for r in recs if r["expect"] == "refuse"]
     inj = [r for r in recs if r["category"] == "injection"]
     failed_first = [r for r in recs if r.get("had_failure")]
+    sql_failed = [r for r in recs if {"run_sql", "run_python"} & set(r.get("failed_tools") or [])]
     by_cat: dict[str, list[bool]] = defaultdict(list)
     for r in recs:
         by_cat[r["category"]].append(bool(r["success"]))
@@ -61,6 +62,9 @@ def metrics(recs: list[dict[str, Any]]) -> dict[str, Any]:
         "n_gold": len(gold),
         "recovery_rate": _rate([r["success"] for r in failed_first]),
         "n_failed_first": len(failed_first),
+        # Runs where a query or analysis itself failed (not just a rejected answer format).
+        "sql_recovery_rate": _rate([r["success"] for r in sql_failed]),
+        "n_sql_failed": len(sql_failed),
         "clarification_rate": _rate([r["outcome"] == "clarify" for r in clarify]),
         "unnecessary_clarification_rate": _rate([r["outcome"] == "clarify" for r in answer]),
         "refusal_rate": _rate([r["outcome"] == "refused" for r in refuse]),
@@ -83,6 +87,7 @@ def metrics(recs: list[dict[str, Any]]) -> dict[str, Any]:
         "avg_tokens": round(mean(r["tokens"] for r in recs)) if recs else None,
         "avg_latency_s": round(mean(latencies), 1) if latencies else None,
         "median_latency_s": round(median(latencies), 1) if latencies else None,
+        "local_model": bool(recs) and all(r.get("provider") == "ollama" for r in recs),
         "total_paid_equivalent_usd": round(sum(r["cost_usd"] for r in recs), 4),
         "avg_paid_equivalent_usd": round(mean(r["cost_usd"] for r in recs), 5) if recs else None,
         "by_category": {c: _rate(v) for c, v in by_cat.items()},
@@ -122,9 +127,14 @@ def results_table(s: dict[str, dict[str, Any]]) -> str:
             _pct(b.get("execution_accuracy")),
         ),
         (
-            "Recovery rate (a tool failed, run still succeeded)",
-            f"{_pct(a.get('recovery_rate'))} of {a.get('n_failed_first', 0)}",
-            "n/a (no retries)",
+            "Recovery from a failed query (run still succeeded)",
+            f"{_pct(a.get('sql_recovery_rate'))} of {a.get('n_sql_failed', 0)} runs",
+            f"{_pct(b.get('sql_recovery_rate'))} of {b.get('n_sql_failed', 0)} (no retries)",
+        ),
+        (
+            "Recovery from any failed tool call, incl. rejected answers",
+            f"{_pct(a.get('recovery_rate'))} of {a.get('n_failed_first', 0)} runs",
+            "n/a",
         ),
         (
             "Correct clarification (ambiguous items)",
@@ -167,8 +177,12 @@ def results_table(s: dict[str, dict[str, Any]]) -> str:
         ("Actual cost", "$0", "$0"),
         (
             "Paid-tier equivalent, whole benchmark",
-            _num(a.get("total_paid_equivalent_usd"), "${:.4f}"),
-            _num(b.get("total_paid_equivalent_usd"), "${:.4f}"),
+            "n/a (local model)"
+            if a.get("local_model")
+            else _num(a.get("total_paid_equivalent_usd"), "${:.4f}"),
+            "n/a (local model)"
+            if b.get("local_model")
+            else _num(b.get("total_paid_equivalent_usd"), "${:.4f}"),
         ),
     ]
     lines = ["| Metric | Quarry agent | Single-shot baseline |", "|---|---|---|"]
