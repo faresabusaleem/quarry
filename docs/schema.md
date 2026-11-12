@@ -13,10 +13,16 @@ These definitions are shared by the agent, the baseline and the ground-truth SQL
 
 - Currency: all money is in Brazilian reais (BRL, R$).
 - Revenue / sales (default): SUM(order_items.price), excluding freight, over orders whose
-  order_status is not 'canceled' or 'unavailable'.
-- Number of orders: COUNT(DISTINCT order_id) with the same status filter, unless asked otherwise.
-- That status filter applies to revenue and order counts only. Questions about payments,
-  reviews, products, sellers or customers use all rows unless the user asks for a filter.
+  order_status is not 'canceled' or 'unavailable'. In SQL:
+      FROM order_items oi JOIN orders o USING (order_id)
+      WHERE o.order_status NOT IN ('canceled', 'unavailable')
+- Number of orders: COUNT(DISTINCT o.order_id) with that same WHERE clause, including when
+  orders are counted per city, state, day, month or category, unless the question names
+  the statuses itself ("all orders", "canceled orders").
+- Sold: a product or category was sold when it appears in order_items of such an order.
+- That status filter applies to revenue, order counts and "sold" only. Questions about
+  payments, reviews, the product catalogue, sellers or customers use all rows unless the
+  user asks for a filter.
 - Time: attribute orders to order_purchase_timestamp. Place a review in time by
   review_creation_date (when it was written), not by its order's purchase date.
 - Reference date: the data ends in 2018. Treat "today" as 2018-09-01, so "last month" is

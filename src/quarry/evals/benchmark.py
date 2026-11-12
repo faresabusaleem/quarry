@@ -56,7 +56,10 @@ def build_gold(db: Database, items: list[Item]) -> dict[str, Gold]:
         res = execute_with_limits(cur, item.gold_sql, max_rows=1000, timeout_s=60)
         if res.truncated:
             raise ValueError(f"{item.id}: gold result is larger than 1,000 rows")
-        out[item.id] = Gold(columns=res.columns, types=res.types, rows=to_jsonable(res.rows))
+        rows = to_jsonable(res.rows)
+        if not item.ordered:  # GROUP BY output order is not stable; keep the file deterministic
+            rows = sorted(rows, key=lambda r: json.dumps(r, default=str))
+        out[item.id] = Gold(columns=res.columns, types=res.types, rows=rows)
     return out
 
 
