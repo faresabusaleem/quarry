@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "quarry-api",
+      "runtimeExecutable": "uv",
+      "runtimeArgs": ["run", "--directory", "/Users/apple/Desktop/quarry", "uvicorn", "quarry.api.app:app", "--port", "8000"],
+      "port": 8000
+    },
+    {
+      "name": "quarry-web",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "/Users/apple/Desktop/quarry/web", "run", "dev"],
+      "port": 3000
+    }
+  ]
+}

@@ -13,6 +13,7 @@ build/
 .env
 .env.*
 !.env.example
+!web/.env.development
 
 # Data (rebuilt by `make data`; the licence allows redistribution but the repo stays small)
 data/raw/
