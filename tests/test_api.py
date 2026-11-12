@@ -134,3 +134,20 @@ def test_oversized_session_is_rejected(client: TestClient) -> None:
     turns = [{"run_id": str(i), "question": "x" * 2000} for i in range(40)]
     r = client.post("/api/chat", json={"message": "hi", "session": {"turns": turns}})
     assert r.status_code == 422
+
+
+def test_missing_provider_is_a_clear_503_and_costs_no_quota(
+    client: TestClient, monkeypatch
+) -> None:
+    from quarry.llm.base import ProviderError
+
+    def broken():
+        raise ProviderError("GEMINI_API_KEY is not set")
+
+    lim = RateLimiter(per_ip_hour=1, global_day=50)
+    monkeypatch.setattr(app_module, "limiter", lim)
+    monkeypatch.setattr(app_module, "provider", broken)
+    r = client.post("/api/chat", json={"message": "hi"})
+    assert r.status_code == 503
+    assert "GEMINI_API_KEY" in r.json()["message"]
+    assert lim.status("testclient")["remaining_hour"] == 1

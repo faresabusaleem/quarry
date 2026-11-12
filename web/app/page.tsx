@@ -100,7 +100,9 @@ export default function AskPage() {
         } else if ((e as Error).name === "AbortError") {
           update(turn.key, (t) => ({ ...t, status: "stopped", error: { message: "You stopped this run." } }));
         } else {
-          update(turn.key, (t) => ({ ...t, status: "error", error: { message: `Could not reach the Quarry API. ${(e as Error).message}` } }));
+          const msg = (e as Error).message;
+          const unreachable = e instanceof TypeError; // fetch() itself failed: network or server down
+          update(turn.key, (t) => ({ ...t, status: "error", error: { message: unreachable ? `Could not reach the Quarry API (${msg}).` : msg, kind: "setup" } }));
         }
       } finally {
         setBusy(false);

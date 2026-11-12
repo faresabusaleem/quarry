@@ -88,7 +88,12 @@ export async function streamChat(
   }
   if (!res.ok || !res.body) {
     const text = await res.text().catch(() => "");
-    throw new Error(text || `${res.status} ${res.statusText}`);
+    let message = text;
+    try {
+      const j = JSON.parse(text);
+      message = j.message ?? j.detail?.[0]?.msg ?? j.error ?? text;
+    } catch {}
+    throw new Error(message || `${res.status} ${res.statusText}`);
   }
   const reader = res.body.getReader();
   const decoder = new TextDecoder();

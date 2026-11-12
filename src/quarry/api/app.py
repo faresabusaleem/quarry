@@ -99,6 +99,12 @@ def _sse(event: str, data: dict[str, Any]) -> str:
 
 @app.post("/api/chat")
 def chat(body: ChatRequest, request: Request) -> StreamingResponse:
+    try:
+        provider()  # fail fast (e.g. no API key) without spending the caller's rate limit
+    except Exception as exc:
+        return JSONResponse(  # type: ignore[return-value]
+            status_code=503, content={"error": "provider_unavailable", "message": str(exc)}
+        )
     decision = limiter.check(client_ip(request))
     if not decision.allowed:
         return JSONResponse(  # type: ignore[return-value]
