@@ -40,7 +40,7 @@ const STATUS_BADGE: Record<string, string> = {
 };
 
 function StatusBadge({ status }: { status: string }) {
-  return <span className={`badge ${STATUS_BADGE[status] ?? ""}`}>{status.replace("_", " ")}</span>;
+  return <span className={`badge ${STATUS_BADGE[status] ?? ""}`}>{status.replaceAll("_", " ")}</span>;
 }
 
 function TraceList() {
@@ -130,7 +130,7 @@ function label(e: Trace["events"][number]): string {
     case "error":
       return d.message;
     case "run_finished":
-      return `${d.status} · ${d.steps} steps · ${d.llm_calls} model calls · ${formatTokens(d.total_tokens)} tokens`;
+      return `${d.status} · ${d.steps} ${d.steps === 1 ? "step" : "steps"} · ${d.llm_calls} model calls · ${formatTokens(d.total_tokens)} tokens`;
     default:
       return "";
   }
@@ -197,11 +197,19 @@ function TraceDetail({ id }: { id: string }) {
           <div className="value num">{tools.length}</div>
           <div className="vs">{failed} failed</div>
         </div>
-        <div className="stat">
-          <div className="label">Cost at paid rates</div>
-          <div className="value num">${(s.cost_usd ?? 0).toFixed(4)}</div>
-          <div className="vs">actual cost $0</div>
-        </div>
+        {s.provider === "ollama" ? (
+          <div className="stat">
+            <div className="label">Cost</div>
+            <div className="value num">$0</div>
+            <div className="vs">local model, no API cost</div>
+          </div>
+        ) : (
+          <div className="stat">
+            <div className="label">Cost at paid rates</div>
+            <div className="value num">${(s.cost_usd ?? 0).toFixed(4)}</div>
+            <div className="vs">actual cost $0 on the free tier</div>
+          </div>
+        )}
       </div>
 
       <div className="toolbar" style={{ justifyContent: "space-between" }}>
@@ -224,7 +232,7 @@ function TraceDetail({ id }: { id: string }) {
                 <span className="tl-time">+{formatMs(end)}</span>
                 <span className="tl-type">
                   <IconChevron width={12} height={12} style={{ verticalAlign: -2, marginRight: 4 }} />
-                  {e.type.replace("_", " ")}
+                  {e.type.replaceAll("_", " ")}
                 </span>
                 <span className="tl-label">{label(e)}</span>
                 <span className="tl-bar" aria-hidden>

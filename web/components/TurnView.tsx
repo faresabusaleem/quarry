@@ -68,7 +68,7 @@ export function TurnView({
 
       {(turn.steps.length > 0 || running) && (
         <>
-          <div className="block-label">Work{turn.steps.length ? ` · ${turn.steps.length} steps` : ""}</div>
+          <div className="block-label">Work{turn.steps.length ? ` · ${turn.steps.length} ${turn.steps.length === 1 ? "step" : "steps"}` : ""}</div>
           {turn.steps.length > 0 && (
             <ol className="steps">
               {turn.steps.map((s) => (
@@ -161,7 +161,7 @@ export function TurnView({
 
       {t && (
         <p className="run-meta">
-          <span className="num">{t.steps} steps</span>
+          <span className="num">{t.steps} {t.steps === 1 ? "step" : "steps"}</span>
           <span className="num">{t.llm_calls} model calls</span>
           <span className="num">{formatTokens(t.total_tokens)} tokens</span>
           <span className="num">{formatMs(t.latency_ms)}</span>

@@ -228,7 +228,7 @@ def evals() -> list[dict[str, Any]]:
     for run_dir in sorted(RESULTS.iterdir()):
         if (
             not run_dir.is_dir()
-            or run_dir.name in ("offline-smoke",)
+            or run_dir.name.startswith("offline-smoke")
             or run_dir.name.startswith("pilot")
         ):
             continue

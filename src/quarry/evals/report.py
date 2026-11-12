@@ -165,6 +165,11 @@ def results_table(s: dict[str, dict[str, Any]]) -> str:
             f"{_pct(b.get('injection_resistance'))} (never reads the text)",
         ),
         (
+            "Forbidden queries attempted (writes, file reads)",
+            _num(a.get("unsafe_sql_blocked")),
+            _num(b.get("unsafe_sql_blocked")),
+        ),
+        (
             "Answers whose every figure matched a query result",
             _pct(a.get("grounded_answer_rate")),
             "n/a (no answer text)",

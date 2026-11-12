@@ -32,8 +32,8 @@ eval-smoke:  ## offline harness check with oracle fakes (no API calls)
 report:
 	uv run python -m quarry.evals.report $(if $(RUN),--run $(RUN),)
 
-readme:  ## regenerate the README results tables from evals/results (RUN=..., BEFORE=...)
-	uv run python -m quarry.evals.readme --run $(RUN) $(if $(BEFORE),--before $(BEFORE),)
+readme:  ## regenerate the README results tables from evals/results (RUN=..., BEFORE=..., HELDOUT=...)
+	uv run python -m quarry.evals.readme --run $(RUN) $(if $(BEFORE),--before $(BEFORE),) $(if $(HELDOUT),--heldout $(HELDOUT),)
 
 serve:  ## API on :8000 (serves the built UI too, if web/out exists)
 	uv run uvicorn quarry.api.app:app --host 0.0.0.0 --port 8000

@@ -26,7 +26,7 @@ interface ItemRow {
   answer: string | null;
 }
 interface EvalRun {
-  meta: { run: string; provider: string; model: string; items: number; started: string };
+  meta: { run: string; provider: string; model: string; items: number; started: string; set?: string };
   summary: { agent?: Metrics; baseline?: Metrics };
   items: { agent: ItemRow[]; baseline: ItemRow[] };
 }
@@ -34,6 +34,9 @@ interface EvalRun {
 const CATEGORY_ORDER = ["lookup", "aggregation", "join", "time_series", "multi_step", "followup", "ambiguous", "unsafe", "out_of_scope", "injection"];
 
 const pct = (x: number | null | undefined) => (x == null ? "–" : `${Math.round(x * 100)}%`);
+// A local model has no price to convert at, so "$0.0000" would read as a measurement.
+const paidCost = (m: Metrics) =>
+  m.local_model ? "n/a (local model)" : m.total_paid_equivalent_usd == null ? "–" : `$${m.total_paid_equivalent_usd.toFixed(4)}`;
 
 export default function EvaluationPage() {
   const [runs, setRuns] = useState<EvalRun[] | null>(null);
@@ -61,17 +64,17 @@ export default function EvaluationPage() {
     if (!run) return null;
     const cats = CATEGORY_ORDER.filter((c) => c in (a.by_category ?? {}) || c in (b.by_category ?? {}));
     const values = cats.flatMap((c) => [
-      { category: c.replace("_", " "), system: "Quarry agent", success: a.by_category?.[c] ?? 0, items: a.by_category_n?.[c] ?? 0 },
-      { category: c.replace("_", " "), system: "Baseline", success: b.by_category?.[c] ?? 0, items: b.by_category_n?.[c] ?? 0 },
+      { category: c.replaceAll("_", " "), system: "Quarry agent", success: a.by_category?.[c] ?? 0, items: a.by_category_n?.[c] ?? 0 },
+      { category: c.replaceAll("_", " "), system: "Baseline", success: b.by_category?.[c] ?? 0, items: b.by_category_n?.[c] ?? 0 },
     ]);
     return {
       data: { values },
       mark: { type: "bar" },
       height: { step: 13 },
       encoding: {
-        y: { field: "category", type: "nominal", sort: cats.map((c) => c.replace("_", " ")), title: null },
+        y: { field: "category", type: "nominal", sort: cats.map((c) => c.replaceAll("_", " ")), title: null },
         yOffset: { field: "system", sort: ["Quarry agent", "Baseline"] },
-        x: { field: "success", type: "quantitative", title: "Task success", axis: { format: ".0%" }, scale: { domain: [0, 1] } },
+        x: { field: "success", type: "quantitative", title: "Task success", axis: { format: ".0%", tickCount: 5 }, scale: { domain: [0, 1] } },
         color: { field: "system", type: "nominal", title: null, sort: ["Quarry agent", "Baseline"] },
         tooltip: [
           { field: "category", type: "nominal" },
@@ -124,7 +127,8 @@ export default function EvaluationPage() {
         <div>
           <h1>Evaluation</h1>
           <p className="sub">
-            {run.meta.items} benchmark questions with hand-written ground-truth SQL. The agent is compared with a
+            {run.meta.items} {run.meta.set === "heldout" ? "held-out questions (written after the v3 code freeze)" : "benchmark questions"}{" "}
+            with hand-written ground-truth SQL. The agent is compared with a
             single-shot text-to-SQL baseline (one model call, same schema and glossary, no tools, no retries) on the same
             model: <span className="mono">{run.meta.model}</span>.
           </p>
@@ -173,17 +177,20 @@ export default function EvaluationPage() {
               {[
                 ["Task success (all items)", pct(a.task_success), pct(b.task_success)],
                 [`Execution accuracy (${a.n_gold ?? b.n_gold} items with gold SQL)`, pct(a.execution_accuracy), pct(b.execution_accuracy)],
-                ["Recovery rate (a tool failed, run still succeeded)", `${pct(a.recovery_rate)} of ${a.n_failed_first ?? 0}`, "no retries"],
+                ["Recovery from a failed query (run still succeeded)", `${pct(a.sql_recovery_rate)} of ${a.n_sql_failed ?? 0}`, `${pct(b.sql_recovery_rate)} of ${b.n_sql_failed ?? 0} (no retries)`],
+                ["Recovery from any failed tool call, incl. rejected answers", `${pct(a.recovery_rate)} of ${a.n_failed_first ?? 0}`, "n/a"],
                 ["Correct clarification", pct(a.clarification_rate), pct(b.clarification_rate)],
                 ["Unnecessary clarification", pct(a.unnecessary_clarification_rate), pct(b.unnecessary_clarification_rate)],
                 ["Correct refusal", pct(a.refusal_rate), pct(b.refusal_rate)],
                 ["False refusal", pct(a.false_refusal_rate), pct(b.false_refusal_rate)],
                 ["Injection resistance", pct(a.injection_resistance), `${pct(b.injection_resistance)} (never reads the text)`],
+                ["Forbidden queries attempted (writes, file reads)", a.unsafe_sql_blocked ?? "–", b.unsafe_sql_blocked ?? "–"],
+                ["Answers whose every figure matched a query result", pct(a.grounded_answer_rate), "n/a (no answer text)"],
                 ["Average steps", a.avg_steps ?? "–", b.avg_steps ?? "–"],
                 ["Average model calls", a.avg_llm_calls ?? "–", b.avg_llm_calls ?? "–"],
                 ["Average tokens", a.avg_tokens?.toLocaleString("en-US") ?? "–", b.avg_tokens?.toLocaleString("en-US") ?? "–"],
                 ["Median latency", a.median_latency_s != null ? `${a.median_latency_s} s` : "–", b.median_latency_s != null ? `${b.median_latency_s} s` : "–"],
-                ["Paid-rate cost, whole benchmark", `$${(a.total_paid_equivalent_usd ?? 0).toFixed(4)}`, `$${(b.total_paid_equivalent_usd ?? 0).toFixed(4)}`],
+                ["Paid-tier equivalent, whole benchmark", paidCost(a), paidCost(b)],
               ].map(([m, x, y]) => (
                 <tr key={m as string}>
                   <td>{m}</td>
@@ -245,7 +252,7 @@ export default function EvaluationPage() {
               <option value="all">All</option>
               {CATEGORY_ORDER.map((c) => (
                 <option key={c} value={c}>
-                  {c.replace("_", " ")}
+                  {c.replaceAll("_", " ")}
                 </option>
               ))}
             </select>
