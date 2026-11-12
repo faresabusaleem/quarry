@@ -1,0 +1,11 @@
+{
+ "run": "v1-heldout-ollama-qwen3.5-9b",
+ "commit": "657a20f",
+ "provider": "ollama",
+ "model": "qwen3.5:9b",
+ "items": 25,
+ "set": "heldout",
+ "started": "2026-11-13 00:57:49",
+ "max_steps": 14,
+ "note": "v1 agent, prompts, glossary and baseline (commit 657a20f) scored with the current harness; see analysis in the v3 held-out folder"
+}
