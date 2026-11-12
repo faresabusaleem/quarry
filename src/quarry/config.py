@@ -48,6 +48,7 @@ class Settings(BaseSettings):
     rate_limit_per_ip_hour: int = 20
     rate_limit_global_day: int = 400
     cors_origins: list[str] = ["http://localhost:3000"]
+    trust_proxy: bool = False  # read the client IP from X-Forwarded-For (behind a proxy only)
 
 
 @lru_cache
