@@ -145,11 +145,46 @@ def test_final_answer_rejects_invented_numbers_then_accepts_flagged(ctx: RunCont
     first = call(ctx, "final_answer", **bad)
     assert not first.ok
     assert "does not appear in q1" in first.error
-    assert "uncited numbers" in first.error
+    assert "12.5%" in first.error  # a figure no query produced
     call(ctx, "final_answer", **bad)
     third = call(ctx, "final_answer", **bad)
     assert third.ok and third.terminal
     assert third.data["unverified"]
+
+
+def test_figures_written_naturally_are_linked_to_their_source(ctx: RunContext) -> None:
+    call(
+        ctx,
+        "run_sql",
+        sql="SELECT 'Feb' AS m, 837895.12 AS revenue UNION ALL SELECT 'Apr', 993592.85",
+        purpose="t",
+    )
+    call(ctx, "run_sql", sql="SELECT 0.1843 AS share", purpose="t2")
+    res = call(
+        ctx,
+        "final_answer",
+        answer="Revenue ranged from R$ 837,895 in February [n1] to R$ 993.6K in April, "
+        "a 18.4% share. Top 5 months in 2018.",
+        citations=[{"id": "n1", "text": "R$ 837,895", "value": 837895.12, "source_id": "q1"}],
+        result_query_id="q1",
+    )
+    assert res.ok and res.data["unverified"] == []
+    text = res.data["answer"]
+    assert "[n1]" not in text  # the duplicate explicit marker is dropped
+    ids = {c["id"]: c for c in res.data["citations"]}
+    autos = [c for c in res.data["citations"] if c["id"].startswith("a")]
+    assert [a["text"] for a in autos] == ["R$ 837,895", "R$ 993.6K", "18.4%"]
+    assert autos[2]["source_id"] == "q2"
+    assert "Top 5 months in 2018" in text  # small integers and years are left alone
+    assert "n1" in ids
+
+
+def test_rounding_must_respect_shown_precision(ctx: RunContext) -> None:
+    call(ctx, "run_sql", sql="SELECT 2960471.25 AS revenue", purpose="t")
+    ok = call(ctx, "final_answer", answer="SP had R$ 2.96M.", result_query_id="q1")
+    assert ok.ok and ok.data["unverified"] == []
+    wrong = call(ctx, "final_answer", answer="SP had R$ 2.9M.", result_query_id="q1")
+    assert not wrong.ok
 
 
 def test_refusal_needs_no_citations(ctx: RunContext) -> None:

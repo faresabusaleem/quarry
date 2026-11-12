@@ -55,6 +55,7 @@ export interface Turn {
   tokens: number;
   startedAt: number;
   pendingNote?: string;
+  provider?: string;
 }
 
 const TOOL_ACTIVITY: Record<string, string> = {
@@ -87,6 +88,7 @@ export function applyEvent(turn: Turn, e: AgentEvent): Turn {
   switch (e.type) {
     case "run_started":
       t.runId = e.run_id;
+      t.provider = d.provider;
       break;
     case "plan":
       t.plan = d.steps;
@@ -130,6 +132,7 @@ export function applyEvent(turn: Turn, e: AgentEvent): Turn {
           ? { ...s, status: d.ok ? "ok" : "error", content: d.content, error: d.error, data: d.data, latencyMs: d.latency_ms }
           : s,
       );
+      if (!t.steps.some((s) => s.status === "running")) t.activity = d.ok ? "Thinking" : "Reading the error";
       break;
     }
     case "reflection": {

@@ -157,6 +157,16 @@ class MakeChartTool(Tool):
             {c: to_jsonable(r[idx[c]]) for c in (args.x, args.y, args.color) if c} for r in src.rows
         ]
         x_enc: dict[str, Any] = {"field": args.x, "type": x_type, "title": args.x.replace("_", " ")}
+        x_values = [r[idx[args.x]] for r in src.rows if r[idx[args.x]] is not None]
+        if (
+            x_type == "temporal"
+            and x_values
+            and all(isinstance(v, str) and re.fullmatch(r"\d{4}-\d{2}", v) for v in x_values)
+        ):
+            # 'YYYY-MM' months: label by month, not by Vega's default weekly ticks.
+            x_enc.update(
+                {"timeUnit": "yearmonth", "axis": {"format": "%b %Y", "labelOverlap": True}}
+            )
         y_enc: dict[str, Any] = {
             "field": args.y,
             "type": "quantitative",

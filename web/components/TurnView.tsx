@@ -165,9 +165,13 @@ export function TurnView({
           <span className="num">{t.llm_calls} model calls</span>
           <span className="num">{formatTokens(t.total_tokens)} tokens</span>
           <span className="num">{formatMs(t.latency_ms)}</span>
-          <span className="num" title="What this run would cost on the provider's paid tier. The demo runs on a free tier.">
-            ${t.cost_usd.toFixed(4)} at paid rates
-          </span>
+          {turn.provider === "ollama" ? (
+            <span>local model, no API cost</span>
+          ) : (
+            <span className="num" title="What this run would cost on the provider's paid tier. The demo runs on a free tier.">
+              ${t.cost_usd.toFixed(4)} at paid rates
+            </span>
+          )}
           {t.recovered && (
             <span>
               <IconInfo width={12} height={12} style={{ verticalAlign: -1 }} /> recovered from an error

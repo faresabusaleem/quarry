@@ -390,7 +390,9 @@ class Agent:
             yield emit(ev.CLARIFICATION, data)
             return
         st.status = data.get("status", "answered")
-        st.recovered = st.had_failure and st.status == "answered"
+        # Recovered: something failed along the way, yet the run ended with an answer that
+        # passed every check (an answer accepted with unverified figures does not count).
+        st.recovered = st.had_failure and st.status == "answered" and not data.get("unverified")
         cited = {c["source_id"] for c in data.get("citations", [])}
         if data.get("result_query_id"):
             cited.add(data["result_query_id"])

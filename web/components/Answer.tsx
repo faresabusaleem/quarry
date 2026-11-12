@@ -19,9 +19,9 @@ export interface Selection {
 }
 
 function inline(text: string, cites: Map<string, Citation>, onCite: (c: Citation) => void, active?: string): ReactNode[] {
-  return text.split(/(\*\*[^*]+\*\*|`[^`]+`|\[n\d+\])/g).map((part, i) => {
+  return text.split(/(\*\*[^*]+\*\*|`[^`]+`|\[[na]\d+\])/g).map((part, i) => {
     if (!part) return null;
-    const m = part.match(/^\[(n\d+)\]$/);
+    const m = part.match(/^\[([na]\d+)\]$/);
     if (m) {
       const c = cites.get(m[1]);
       if (!c) return <span key={i}>{part}</span>;
