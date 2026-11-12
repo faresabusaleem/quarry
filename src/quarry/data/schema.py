@@ -240,7 +240,10 @@ GLOSSARY = """\
 - Revenue / sales (default): SUM(order_items.price), excluding freight, over orders whose
   order_status is not 'canceled' or 'unavailable'.
 - Number of orders: COUNT(DISTINCT order_id) with the same status filter, unless asked otherwise.
-- Time: attribute orders to order_purchase_timestamp.
+- That status filter applies to revenue and order counts only. Questions about payments,
+  reviews, products, sellers or customers use all rows unless the user asks for a filter.
+- Time: attribute orders to order_purchase_timestamp. Place a review in time by
+  review_creation_date (when it was written), not by its order's purchase date.
 - Reference date: the data ends in 2018. Treat "today" as 2018-09-01, so "last month" is
   August 2018, "last quarter" is 2018 Q2 (April-June) and "this year" is 2018 (Jan-Aug).
 - Customer: a person is customers.customer_unique_id (customer_id changes per order).

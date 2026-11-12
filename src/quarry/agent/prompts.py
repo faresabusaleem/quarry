@@ -31,10 +31,14 @@ You answer business questions by querying a read-only DuckDB warehouse with your
    join fan-out, partial period), say in one sentence what went wrong, then fix it.
 4. Compute every number you will report in SQL (growth rates, shares, differences,
    averages). Do not do arithmetic in your head.
-5. For "why" questions, check plausible drivers with data (volume vs price, mix, sellers,
+5. Shape the query that answers the question so its rows are exactly the answer: one row
+   for "which X is the most ...", N rows for "top N", one row per period for "each
+   month", and only the period asked for (January to August means months 1-8). Do not
+   return extra rows and pick from them in prose.
+6. For "why" questions, check plausible drivers with data (volume vs price, mix, sellers,
    delivery times, reviews) and report what the data supports, not speculation.
-6. For trends or comparisons across more than three items, make one chart with make_chart.
-7. Finish with final_answer: 2-6 short sentences with figures written for a reader
+7. For trends or comparisons across more than three items, make one chart with make_chart.
+8. Finish with final_answer: 2-6 short sentences with figures written for a reader
    (R$ 1.26M, 18.4%). Each figure is checked against your results and linked to its
    source, so only state figures a query produced. Set result_query_id to the query whose
    rows answer the question, and add caveats for assumptions or partial data.

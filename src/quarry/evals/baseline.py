@@ -37,6 +37,8 @@ DuckDB SQL query over the schema below. The database is read-only.
 
 Reply with a JSON object:
 - {{"action": "sql", "sql": "<one SELECT query whose result answers the question>"}}
+  The rows must be exactly the answer: one row for "which X is the most ...", N rows for
+  "top N", one row per period for "each month", only for the period asked.
 - {{"action": "clarify", "message": "<question>"}} if the question has several reasonable
   meanings that the glossary does not settle;
 - {{"action": "refuse", "message": "<reason>"}} if the request is out of scope or unsafe
