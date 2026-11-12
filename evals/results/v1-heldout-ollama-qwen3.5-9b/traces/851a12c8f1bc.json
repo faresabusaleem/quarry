@@ -1,0 +1,199 @@
+{
+ "summary": {
+  "run_id": "851a12c8f1bc",
+  "created": 1794518755.9560452,
+  "question": "What's a good recipe for feijoada?",
+  "message": "What's a good recipe for feijoada?",
+  "session_id": "b5f9823ff6c6",
+  "provider": "ollama",
+  "model": "qwen3.5:9b",
+  "status": "refused",
+  "steps": 2,
+  "total_tokens": 6748,
+  "cost_usd": 0.0,
+  "latency_ms": 8349,
+  "eval_item": "H23"
+ },
+ "events": [
+  {
+   "type": "run_started",
+   "run_id": "851a12c8f1bc",
+   "ts": 1794518755.9560452,
+   "step": null,
+   "data": {
+    "message": "What's a good recipe for feijoada?",
+    "question": "What's a good recipe for feijoada?",
+    "session_id": "b5f9823ff6c6",
+    "provider": "ollama",
+    "model": "qwen3.5:9b",
+    "tools": [
+     "list_tables",
+     "describe_table",
+     "sample_rows",
+     "run_sql",
+     "run_python",
+     "make_chart",
+     "ask_user",
+     "final_answer"
+    ]
+   }
+  },
+  {
+   "type": "llm_call",
+   "run_id": "851a12c8f1bc",
+   "ts": 1794518758.986142,
+   "step": null,
+   "data": {
+    "purpose": "plan",
+    "model": "qwen3.5:9b",
+    "input_tokens": 722,
+    "output_tokens": 57,
+    "thinking_tokens": 0,
+    "latency_ms": 3030,
+    "retries": 0,
+    "cost_usd": 0.0
+   }
+  },
+  {
+   "type": "plan",
+   "run_id": "851a12c8f1bc",
+   "ts": 1794518758.986187,
+   "step": null,
+   "data": {
+    "steps": [
+     "Refuse: I cannot provide recipes as this is out of scope for the Olist marketplace data warehouse.",
+     "I can only analyze sales orders, customer satisfaction, and product categories in Brazilian Reais."
+    ]
+   }
+  },
+  {
+   "type": "llm_call",
+   "run_id": "851a12c8f1bc",
+   "ts": 1794518761.057557,
+   "step": 1,
+   "data": {
+    "purpose": "act",
+    "model": "qwen3.5:9b",
+    "input_tokens": 2889,
+    "output_tokens": 36,
+    "thinking_tokens": 0,
+    "latency_ms": 2070,
+    "retries": 0,
+    "cost_usd": 0.0
+   }
+  },
+  {
+   "type": "assistant_note",
+   "run_id": "851a12c8f1bc",
+   "ts": 1794518761.057576,
+   "step": 1,
+   "data": {
+    "text": "I cannot provide recipes as this is out of scope for the Olist marketplace data warehouse. I can only analyze sales orders, customer satisfaction, and product categories in Brazilian Reais."
+   }
+  },
+  {
+   "type": "reflection",
+   "run_id": "851a12c8f1bc",
+   "ts": 1794518761.0575821,
+   "step": 1,
+   "data": {
+    "kind": "no_tool_call",
+    "message": "You must respond by calling a tool. If you have enough information, call final_answer now; if the request is out of scope, call final_answer with status='refused'."
+   }
+  },
+  {
+   "type": "llm_call",
+   "run_id": "851a12c8f1bc",
+   "ts": 1794518764.304571,
+   "step": 2,
+   "data": {
+    "purpose": "act",
+    "model": "qwen3.5:9b",
+    "input_tokens": 2971,
+    "output_tokens": 73,
+    "thinking_tokens": 0,
+    "latency_ms": 3247,
+    "retries": 0,
+    "cost_usd": 0.0
+   }
+  },
+  {
+   "type": "tool_call",
+   "run_id": "851a12c8f1bc",
+   "ts": 1794518764.3045928,
+   "step": 2,
+   "data": {
+    "call_id": "call_5cwkul2w",
+    "tool": "final_answer",
+    "args": {
+     "status": "refused",
+     "answer": "I cannot provide recipes as this is out of scope for the Olist marketplace data warehouse. I can only analyze sales orders, customer satisfaction, and product categories in Brazilian Reais."
+    }
+   }
+  },
+  {
+   "type": "tool_result",
+   "run_id": "851a12c8f1bc",
+   "ts": 1794518764.304624,
+   "step": 2,
+   "data": {
+    "call_id": "call_5cwkul2w",
+    "tool": "final_answer",
+    "ok": true,
+    "content": "Answer delivered.",
+    "error": null,
+    "data": {
+     "status": "refused",
+     "answer": "I cannot provide recipes as this is out of scope for the Olist marketplace data warehouse. I can only analyze sales orders, customer satisfaction, and product categories in Brazilian Reais.",
+     "citations": [],
+     "result_query_id": null,
+     "chart_ids": [],
+     "caveats": [],
+     "unverified": []
+    },
+    "latency_ms": 0.0
+   }
+  },
+  {
+   "type": "final",
+   "run_id": "851a12c8f1bc",
+   "ts": 1794518764.304641,
+   "step": 2,
+   "data": {
+    "status": "refused",
+    "answer": "I cannot provide recipes as this is out of scope for the Olist marketplace data warehouse. I can only analyze sales orders, customer satisfaction, and product categories in Brazilian Reais.",
+    "citations": [],
+    "result_query_id": null,
+    "chart_ids": [],
+    "caveats": [],
+    "unverified": [],
+    "sources": {},
+    "charts": []
+   }
+  },
+  {
+   "type": "run_finished",
+   "run_id": "851a12c8f1bc",
+   "ts": 1794518764.304669,
+   "step": 2,
+   "data": {
+    "status": "refused",
+    "steps": 2,
+    "llm_calls": 3,
+    "usage": {
+     "input_tokens": 6582,
+     "output_tokens": 166,
+     "thinking_tokens": 0
+    },
+    "total_tokens": 6748,
+    "cost_usd": 0.0,
+    "latency_ms": 8349,
+    "recovered": false,
+    "had_failure": false,
+    "queries": {},
+    "python_runs": {},
+    "charts": {}
+   }
+  }
+ ]
+}

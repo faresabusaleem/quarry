@@ -1,0 +1,202 @@
+{
+ "summary": {
+  "run_id": "2677e9920b4d",
+  "created": 1794523845.9149618,
+  "question": "Show me the trend.",
+  "message": "Show me the trend.",
+  "session_id": "ddacc3b8bd8c",
+  "provider": "ollama",
+  "model": "qwen3.5:9b",
+  "status": "clarify",
+  "steps": 2,
+  "total_tokens": 7825,
+  "cost_usd": 0.0,
+  "latency_ms": 14782,
+  "eval_item": "C03"
+ },
+ "events": [
+  {
+   "type": "run_started",
+   "run_id": "2677e9920b4d",
+   "ts": 1794523845.9149618,
+   "step": null,
+   "data": {
+    "message": "Show me the trend.",
+    "question": "Show me the trend.",
+    "session_id": "ddacc3b8bd8c",
+    "provider": "ollama",
+    "model": "qwen3.5:9b",
+    "tools": [
+     "list_tables",
+     "describe_table",
+     "sample_rows",
+     "run_sql",
+     "run_python",
+     "make_chart",
+     "ask_user",
+     "final_answer"
+    ]
+   }
+  },
+  {
+   "type": "llm_call",
+   "run_id": "2677e9920b4d",
+   "ts": 1794523850.837893,
+   "step": null,
+   "data": {
+    "purpose": "plan",
+    "model": "qwen3.5:9b",
+    "input_tokens": 864,
+    "output_tokens": 75,
+    "thinking_tokens": 0,
+    "latency_ms": 4923,
+    "retries": 0,
+    "cost_usd": 0.0
+   }
+  },
+  {
+   "type": "plan",
+   "run_id": "2677e9920b4d",
+   "ts": 1794523850.837932,
+   "step": null,
+   "data": {
+    "steps": [
+     "Clarify the time dimension (e.g., daily, monthly, yearly) and the specific metric to trend (e.g., revenue, order count, or units sold).",
+     "Ask which scope applies: all orders vs. non-canceled orders, and whether to include freight in revenue."
+    ]
+   }
+  },
+  {
+   "type": "llm_call",
+   "run_id": "2677e9920b4d",
+   "ts": 1794523855.546092,
+   "step": 1,
+   "data": {
+    "purpose": "act",
+    "model": "qwen3.5:9b",
+    "input_tokens": 3299,
+    "output_tokens": 80,
+    "thinking_tokens": 0,
+    "latency_ms": 4706,
+    "retries": 0,
+    "cost_usd": 0.0
+   }
+  },
+  {
+   "type": "assistant_note",
+   "run_id": "2677e9920b4d",
+   "ts": 1794523855.546141,
+   "step": 1,
+   "data": {
+    "text": "I need to clarify a few things before I can show you the trend:\n\n1. **Time dimension**: Do you want daily, monthly, or yearly trends?\n2. **Metric**: What would you like to see trending - revenue (R$), order count, or units sold?\n3. **Scope**: Should I include all orders or only non-canceled orders for the metric?"
+   }
+  },
+  {
+   "type": "reflection",
+   "run_id": "2677e9920b4d",
+   "ts": 1794523855.546156,
+   "step": 1,
+   "data": {
+    "kind": "no_tool_call",
+    "message": "You must respond by calling a tool. If you have enough information, call final_answer now; if the request is out of scope, call final_answer with status='refused'."
+   }
+  },
+  {
+   "type": "llm_call",
+   "run_id": "2677e9920b4d",
+   "ts": 1794523860.696706,
+   "step": 2,
+   "data": {
+    "purpose": "act",
+    "model": "qwen3.5:9b",
+    "input_tokens": 3425,
+    "output_tokens": 82,
+    "thinking_tokens": 0,
+    "latency_ms": 5150,
+    "retries": 0,
+    "cost_usd": 0.0
+   }
+  },
+  {
+   "type": "tool_call",
+   "run_id": "2677e9920b4d",
+   "ts": 1794523860.6967502,
+   "step": 2,
+   "data": {
+    "call_id": "call_5ug35eb6",
+    "tool": "ask_user",
+    "args": {
+     "question": "What time dimension do you want for the trend?",
+     "options": [
+      "Daily",
+      "Monthly",
+      "Yearly"
+     ],
+     "reason": "The request doesn't specify whether to show daily, monthly, or yearly trends."
+    }
+   }
+  },
+  {
+   "type": "tool_result",
+   "run_id": "2677e9920b4d",
+   "ts": 1794523860.6968188,
+   "step": 2,
+   "data": {
+    "call_id": "call_5ug35eb6",
+    "tool": "ask_user",
+    "ok": true,
+    "content": "Question sent to the user. Stop here and wait for the reply.",
+    "error": null,
+    "data": {
+     "question": "What time dimension do you want for the trend?",
+     "options": [
+      "Daily",
+      "Monthly",
+      "Yearly"
+     ],
+     "reason": "The request doesn't specify whether to show daily, monthly, or yearly trends."
+    },
+    "latency_ms": 0.0
+   }
+  },
+  {
+   "type": "clarification",
+   "run_id": "2677e9920b4d",
+   "ts": 1794523860.6968498,
+   "step": 2,
+   "data": {
+    "question": "What time dimension do you want for the trend?",
+    "options": [
+     "Daily",
+     "Monthly",
+     "Yearly"
+    ],
+    "reason": "The request doesn't specify whether to show daily, monthly, or yearly trends."
+   }
+  },
+  {
+   "type": "run_finished",
+   "run_id": "2677e9920b4d",
+   "ts": 1794523860.6969118,
+   "step": 2,
+   "data": {
+    "status": "clarify",
+    "steps": 2,
+    "llm_calls": 3,
+    "usage": {
+     "input_tokens": 7588,
+     "output_tokens": 237,
+     "thinking_tokens": 0
+    },
+    "total_tokens": 7825,
+    "cost_usd": 0.0,
+    "latency_ms": 14782,
+    "recovered": false,
+    "had_failure": false,
+    "queries": {},
+    "python_runs": {},
+    "charts": {}
+   }
+  }
+ ]
+}

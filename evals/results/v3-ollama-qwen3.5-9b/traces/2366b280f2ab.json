@@ -1,0 +1,163 @@
+{
+ "summary": {
+  "run_id": "2366b280f2ab",
+  "created": 1794524009.281313,
+  "question": "What's the weather in S\u00e3o Paulo today?",
+  "message": "What's the weather in S\u00e3o Paulo today?",
+  "session_id": "2f3ee8ce6640",
+  "provider": "ollama",
+  "model": "qwen3.5:9b",
+  "status": "refused",
+  "steps": 1,
+  "total_tokens": 4263,
+  "cost_usd": 0.0,
+  "latency_ms": 7817,
+  "eval_item": "R04"
+ },
+ "events": [
+  {
+   "type": "run_started",
+   "run_id": "2366b280f2ab",
+   "ts": 1794524009.281313,
+   "step": null,
+   "data": {
+    "message": "What's the weather in S\u00e3o Paulo today?",
+    "question": "What's the weather in S\u00e3o Paulo today?",
+    "session_id": "2f3ee8ce6640",
+    "provider": "ollama",
+    "model": "qwen3.5:9b",
+    "tools": [
+     "list_tables",
+     "describe_table",
+     "sample_rows",
+     "run_sql",
+     "run_python",
+     "make_chart",
+     "ask_user",
+     "final_answer"
+    ]
+   }
+  },
+  {
+   "type": "llm_call",
+   "run_id": "2366b280f2ab",
+   "ts": 1794524012.781843,
+   "step": null,
+   "data": {
+    "purpose": "plan",
+    "model": "qwen3.5:9b",
+    "input_tokens": 868,
+    "output_tokens": 49,
+    "thinking_tokens": 0,
+    "latency_ms": 3500,
+    "retries": 0,
+    "cost_usd": 0.0
+   }
+  },
+  {
+   "type": "plan",
+   "run_id": "2366b280f2ab",
+   "ts": 1794524012.781877,
+   "step": null,
+   "data": {
+    "steps": [
+     "Refuse: This request is out of scope as the available tables (orders, customers, geolocation) do not contain real-time weather data or forecasts for S\u00e3o Paulo."
+    ]
+   }
+  },
+  {
+   "type": "llm_call",
+   "run_id": "2366b280f2ab",
+   "ts": 1794524017.0987148,
+   "step": 1,
+   "data": {
+    "purpose": "act",
+    "model": "qwen3.5:9b",
+    "input_tokens": 3278,
+    "output_tokens": 68,
+    "thinking_tokens": 0,
+    "latency_ms": 4315,
+    "retries": 0,
+    "cost_usd": 0.0
+   }
+  },
+  {
+   "type": "tool_call",
+   "run_id": "2366b280f2ab",
+   "ts": 1794524017.098751,
+   "step": 1,
+   "data": {
+    "call_id": "call_m4sf6za1",
+    "tool": "final_answer",
+    "args": {
+     "status": "refused",
+     "answer": "This request is out of scope as the available tables (orders, customers, geolocation) do not contain real-time weather data or forecasts for S\u00e3o Paulo."
+    }
+   }
+  },
+  {
+   "type": "tool_result",
+   "run_id": "2366b280f2ab",
+   "ts": 1794524017.098808,
+   "step": 1,
+   "data": {
+    "call_id": "call_m4sf6za1",
+    "tool": "final_answer",
+    "ok": true,
+    "content": "Answer delivered.",
+    "error": null,
+    "data": {
+     "status": "refused",
+     "answer": "This request is out of scope as the available tables (orders, customers, geolocation) do not contain real-time weather data or forecasts for S\u00e3o Paulo.",
+     "citations": [],
+     "result_query_id": null,
+     "chart_ids": [],
+     "caveats": [],
+     "unverified": []
+    },
+    "latency_ms": 0.0
+   }
+  },
+  {
+   "type": "final",
+   "run_id": "2366b280f2ab",
+   "ts": 1794524017.098826,
+   "step": 1,
+   "data": {
+    "status": "refused",
+    "answer": "This request is out of scope as the available tables (orders, customers, geolocation) do not contain real-time weather data or forecasts for S\u00e3o Paulo.",
+    "citations": [],
+    "result_query_id": null,
+    "chart_ids": [],
+    "caveats": [],
+    "unverified": [],
+    "sources": {},
+    "charts": []
+   }
+  },
+  {
+   "type": "run_finished",
+   "run_id": "2366b280f2ab",
+   "ts": 1794524017.098856,
+   "step": 1,
+   "data": {
+    "status": "refused",
+    "steps": 1,
+    "llm_calls": 2,
+    "usage": {
+     "input_tokens": 4146,
+     "output_tokens": 117,
+     "thinking_tokens": 0
+    },
+    "total_tokens": 4263,
+    "cost_usd": 0.0,
+    "latency_ms": 7817,
+    "recovered": false,
+    "had_failure": false,
+    "queries": {},
+    "python_runs": {},
+    "charts": {}
+   }
+  }
+ ]
+}

@@ -36,8 +36,8 @@ web/next-env.d.ts
 .idea/
 .vscode/
 
-# Eval run artefacts: per-run traces are large; the scored JSONL and summaries are committed
-evals/results/*/traces/
+# Eval run artefacts: scored JSONL, summaries and analyses are committed.
+# Traces of the measured runs are committed so the error analyses can be checked.
 evals/results/offline-smoke/
 evals/results/pilot-*/
 evals/*.log

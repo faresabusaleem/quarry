@@ -1,0 +1,177 @@
+{
+ "summary": {
+  "run_id": "6830f442e3af",
+  "created": 1794506556.4723358,
+  "question": "Who are our best customers?",
+  "message": "Who are our best customers?",
+  "session_id": "3b943a06af8c",
+  "provider": "ollama",
+  "model": "qwen3.5:9b",
+  "status": "clarify",
+  "steps": 1,
+  "total_tokens": 3854,
+  "cost_usd": 0.0,
+  "latency_ms": 10883,
+  "eval_item": "C01"
+ },
+ "events": [
+  {
+   "type": "run_started",
+   "run_id": "6830f442e3af",
+   "ts": 1794506556.4723358,
+   "step": null,
+   "data": {
+    "message": "Who are our best customers?",
+    "question": "Who are our best customers?",
+    "session_id": "3b943a06af8c",
+    "provider": "ollama",
+    "model": "qwen3.5:9b",
+    "tools": [
+     "list_tables",
+     "describe_table",
+     "sample_rows",
+     "run_sql",
+     "run_python",
+     "make_chart",
+     "ask_user",
+     "final_answer"
+    ]
+   }
+  },
+  {
+   "type": "llm_call",
+   "run_id": "6830f442e3af",
+   "ts": 1794506561.673155,
+   "step": null,
+   "data": {
+    "purpose": "plan",
+    "model": "qwen3.5:9b",
+    "input_tokens": 718,
+    "output_tokens": 97,
+    "thinking_tokens": 0,
+    "latency_ms": 5201,
+    "retries": 0,
+    "cost_usd": 0.0
+   }
+  },
+  {
+   "type": "plan",
+   "run_id": "6830f442e3af",
+   "ts": 1794506561.6732821,
+   "step": null,
+   "data": {
+    "steps": [
+     "Clarify the definition of 'best customers': do they mean highest total revenue, most orders placed, or highest average order value?",
+     "Join orders, order_items, and customers tables to calculate the chosen metric (e.g., SUM(price) or COUNT(order_id)) per customer_unique_id.",
+     "Filter out canceled/unavailable orders and rank customers by the calculated metric to identify the top performers."
+    ]
+   }
+  },
+  {
+   "type": "llm_call",
+   "run_id": "6830f442e3af",
+   "ts": 1794506567.353778,
+   "step": 1,
+   "data": {
+    "purpose": "act",
+    "model": "qwen3.5:9b",
+    "input_tokens": 2925,
+    "output_tokens": 114,
+    "thinking_tokens": 0,
+    "latency_ms": 5676,
+    "retries": 0,
+    "cost_usd": 0.0
+   }
+  },
+  {
+   "type": "assistant_note",
+   "run_id": "6830f442e3af",
+   "ts": 1794506567.353835,
+   "step": 1,
+   "data": {
+    "text": "I need to clarify what \"best customers\" means in this context, as different definitions would give materially different answers."
+   }
+  },
+  {
+   "type": "tool_call",
+   "run_id": "6830f442e3af",
+   "ts": 1794506567.353853,
+   "step": 1,
+   "data": {
+    "call_id": "call_wwpmm3ax",
+    "tool": "ask_user",
+    "args": {
+     "question": "What defines a \"best customer\"?",
+     "options": [
+      "Highest total revenue (sum of all order prices)",
+      "Most orders placed",
+      "Highest average order value"
+     ],
+     "reason": "These three metrics would identify different sets of customers and give materially different answers."
+    }
+   }
+  },
+  {
+   "type": "tool_result",
+   "run_id": "6830f442e3af",
+   "ts": 1794506567.353961,
+   "step": 1,
+   "data": {
+    "call_id": "call_wwpmm3ax",
+    "tool": "ask_user",
+    "ok": true,
+    "content": "Question sent to the user. Stop here and wait for the reply.",
+    "error": null,
+    "data": {
+     "question": "What defines a \"best customer\"?",
+     "options": [
+      "Highest total revenue (sum of all order prices)",
+      "Most orders placed",
+      "Highest average order value"
+     ],
+     "reason": "These three metrics would identify different sets of customers and give materially different answers."
+    },
+    "latency_ms": 0.1
+   }
+  },
+  {
+   "type": "clarification",
+   "run_id": "6830f442e3af",
+   "ts": 1794506567.355765,
+   "step": 1,
+   "data": {
+    "question": "What defines a \"best customer\"?",
+    "options": [
+     "Highest total revenue (sum of all order prices)",
+     "Most orders placed",
+     "Highest average order value"
+    ],
+    "reason": "These three metrics would identify different sets of customers and give materially different answers."
+   }
+  },
+  {
+   "type": "run_finished",
+   "run_id": "6830f442e3af",
+   "ts": 1794506567.355867,
+   "step": 1,
+   "data": {
+    "status": "clarify",
+    "steps": 1,
+    "llm_calls": 2,
+    "usage": {
+     "input_tokens": 3643,
+     "output_tokens": 211,
+     "thinking_tokens": 0
+    },
+    "total_tokens": 3854,
+    "cost_usd": 0.0,
+    "latency_ms": 10883,
+    "recovered": false,
+    "had_failure": false,
+    "queries": {},
+    "python_runs": {},
+    "charts": {}
+   }
+  }
+ ]
+}
