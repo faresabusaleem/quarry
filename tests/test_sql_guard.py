@@ -54,7 +54,7 @@ def test_allows_read_only_queries(sql: str) -> None:
         ("SELECT * FROM information_schema.tables", "schema"),
         ("SELECT * FROM glob('/Users/*')", "glob"),
         ("", "empty"),
-        ("SELEC * FROM orders", "parse"),
+        ("SELEC * FROM orders", "syntax error"),
         ("SELECT " + "1," * 5000 + "1", "longer than"),
     ],
 )
@@ -68,3 +68,10 @@ def test_cte_names_are_allowed_but_tracked_tables_are_real() -> None:
     result = check_sql("WITH recent AS (SELECT * FROM orders) SELECT COUNT(*) FROM recent", TABLES)
     assert result.ok
     assert result.tables == ["orders"]
+
+
+def test_parse_failures_are_explained_in_duckdb_terms() -> None:
+    result = check_sql("SELECT AVG(OR.review_score) FROM order_reviews OR", ["order_reviews"])
+    assert not result.ok
+    assert 'syntax error at or near "OR"' in result.reason
+    assert "reserved words" in result.reason

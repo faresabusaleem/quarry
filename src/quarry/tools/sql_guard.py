@@ -11,6 +11,7 @@ from __future__ import annotations
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 
+import duckdb
 import sqlglot
 from sqlglot import exp
 from sqlglot.errors import ParseError
@@ -99,6 +100,28 @@ def _func_name(node: exp.Func) -> str:
     return node.sql_name().lower()
 
 
+def _reject_unparseable(text: str, exc: ParseError) -> GuardResult:
+    """Explain a parse failure in DuckDB's own words.
+
+    sqlglot's messages ("Required keyword: 'this' missing for Or") mean nothing to a model;
+    v1-v3 traces show the agent resending the same query up to five times after one. DuckDB's
+    parser says "syntax error at or near "OR"", which points at the actual mistake (here, a
+    reserved word used as a table alias). The query is still rejected either way.
+    """
+    try:
+        duckdb.extract_statements(text)
+    except duckdb.Error as db_exc:
+        first = str(db_exc).splitlines()[0]
+        return GuardResult.reject(
+            f"{first}. Check for reserved words used as aliases (OR, AS, ON, BY, TO, DO)."
+        )
+    first = str(exc).splitlines()[0]
+    return GuardResult.reject(
+        f"the query checker could not parse this query ({first}). Rewrite it in plainer "
+        "SQL: short aliases that are not keywords, explicit GROUP BY columns."
+    )
+
+
 def check_sql(sql: str, allowed_tables: Iterable[str]) -> GuardResult:
     allowed = {t.lower() for t in allowed_tables}
     text = sql.strip()
@@ -110,10 +133,7 @@ def check_sql(sql: str, allowed_tables: Iterable[str]) -> GuardResult:
     try:
         statements = [s for s in sqlglot.parse(text, read="duckdb") if s is not None]
     except ParseError as exc:
-        first = str(exc).splitlines()[0]
-        return GuardResult.reject(
-            f"could not parse the query ({first}). Use a single standard DuckDB SELECT."
-        )
+        return _reject_unparseable(text, exc)
     if len(statements) != 1:
         return GuardResult.reject(
             f"exactly one statement is allowed, got {len(statements)}. Remove extra statements."
