@@ -1,0 +1,36 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+dist/
+build/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Data (rebuilt by `make data`; the licence allows redistribution but the repo stays small)
+data/raw/
+data/*.duckdb
+data/*.duckdb.wal
+
+# Run artefacts
+traces/*
+!traces/.gitkeep
+evals/runs/
+
+# Web
+web/node_modules/
+web/.next/
+web/out/
+web/next-env.d.ts
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
