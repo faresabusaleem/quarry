@@ -1426,6 +1426,10 @@ details.table-details[open] summary {
   .step-body {
     padding-left: 14px;
   }
+  .step-meta .mono,
+  .step-meta .num {
+    display: none; /* keep the step's subject visible on phones */
+  }
   .page {
     padding: 20px 16px 48px;
   }
