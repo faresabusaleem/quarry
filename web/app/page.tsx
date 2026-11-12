@@ -20,6 +20,8 @@ const FALLBACK_EXAMPLES = [
 export default function AskPage() {
   const [turns, setTurns] = useState<Turn[]>([]);
   const [sessionId, setSessionId] = useState<string | null>(null);
+  // The conversation memory travels with the client so follow-ups work on any server instance.
+  const [sessionState, setSessionState] = useState<unknown>(null);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [schema, setSchema] = useState<SchemaInfo | null>(null);
@@ -62,8 +64,12 @@ export default function AskPage() {
       abortRef.current = ctrl;
       try {
         await streamChat(
-          { message: text, session_id: sessionId },
+          { message: text, session_id: sessionId, session: sessionState ?? undefined },
           (name, data) => {
+            if (name === "session_state") {
+              setSessionState(data);
+              return;
+            }
             if (name === "session") {
               setSessionId(data.session_id);
               if (typeof data.remaining_hour === "number") setRemaining(data.remaining_hour);
@@ -88,7 +94,7 @@ export default function AskPage() {
         inputRef.current?.focus();
       }
     },
-    [busy, sessionId],
+    [busy, sessionId, sessionState],
   );
 
   const sourceFor = (sel: Selection): SourceRecord | undefined => {
@@ -100,6 +106,7 @@ export default function AskPage() {
     abortRef.current?.abort();
     setTurns([]);
     setSessionId(null);
+    setSessionState(null);
     setSelection(null);
   };
 

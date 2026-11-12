@@ -52,11 +52,11 @@ def test_chat_streams_events_and_saves_a_trace(client: TestClient, tmp_path) -> 
     names = [e for e, _ in events]
     assert names[0] == "session"
     assert "plan" in names and "tool_call" in names and "final" in names
-    assert names[-1] == "run_finished"
+    assert names[-2:] == ["run_finished", "session_state"]
     final = next(d for e, d in events if e == "final")["data"]
     assert final["sources"]["q1"]["rows"] == [[99441]]
 
-    run_id = events[-1][1]["run_id"]
+    run_id = events[-2][1]["run_id"]
     listed = client.get("/api/traces").json()
     assert listed[0]["run_id"] == run_id
     full = client.get(f"/api/traces/{run_id}").json()
@@ -113,3 +113,24 @@ def test_health_and_schema(client: TestClient) -> None:
 def test_unknown_trace_is_404(client: TestClient) -> None:
     assert client.get("/api/traces/nope").status_code == 404
     assert client.get("/api/traces/..%2Fetc").status_code == 404
+
+
+def test_client_carried_session_works_without_server_memory(
+    client: TestClient, monkeypatch
+) -> None:
+    events = parse_sse(client.post("/api/chat", json={"message": "How many orders?"}).text)
+    state = next(d for e, d in events if e == "session_state")
+    assert state["turns"][0]["question"] == "How many orders?"
+    app_module.sessions.sessions.clear()  # a different serverless instance
+    monkeypatch.setattr(app_module, "provider", scripted)
+    second = parse_sse(
+        client.post("/api/chat", json={"message": "And delivered?", "session": state}).text
+    )
+    final_state = next(d for e, d in second if e == "session_state")
+    assert [t["question"] for t in final_state["turns"]] == ["How many orders?", "And delivered?"]
+
+
+def test_oversized_session_is_rejected(client: TestClient) -> None:
+    turns = [{"run_id": str(i), "question": "x" * 2000} for i in range(40)]
+    r = client.post("/api/chat", json={"message": "hi", "session": {"turns": turns}})
+    assert r.status_code == 422

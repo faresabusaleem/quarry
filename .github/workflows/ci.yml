@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    name: Lint, tests and offline eval
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: astral-sh/setup-uv@v10
+        with:
+          enable-cache: true
+
+      - name: Install
+        run: uv sync --all-extras
+
+      - name: Lint
+        run: |
+          uv run ruff check src tests
+          uv run ruff format --check src tests
+
+      # The sandbox isolates run_python in an unprivileged network namespace. Ubuntu 24.04
+      # blocks those by default through AppArmor; allow them so the sandbox tests run here.
+      - name: Allow unprivileged user namespaces
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
+      - name: Cache raw data
+        uses: actions/cache@v6
+        with:
+          path: data/raw
+          key: olist-raw-${{ hashFiles('data/checksums.sha256') }}
+
+      - name: Build warehouse (downloads the public dataset once, verifies checksums)
+        run: make data
+
+      - name: Tests (fake LLM only, no API calls)
+        run: uv run pytest
+
+      - name: Offline eval smoke test (oracle fakes through the real loop and scorer)
+        run: |
+          make eval-smoke
+          uv run python - <<'PY'
+          import json
+          s = json.load(open("evals/results/offline-smoke/summary.json"))
+          for system, m in s.items():
+              assert m["task_success"] == 1.0, (system, m["failures"])
+          print("harness OK:", {k: v["n"] for k, v in s.items()})
+          PY
+
+  web:
+    name: Web lint, types and build
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run build

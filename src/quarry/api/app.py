@@ -21,11 +21,11 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from quarry.agent import events as ev
 from quarry.agent.loop import Agent
-from quarry.agent.memory import SessionStore
+from quarry.agent.memory import Session, SessionStore
 from quarry.agent.trace import TraceRecorder, list_traces, load_trace
 from quarry.api.ratelimit import RateLimiter
 from quarry.config import ROOT, get_settings
@@ -81,6 +81,16 @@ def client_ip(request: Request) -> str:
 class ChatRequest(BaseModel):
     message: str = Field(min_length=1, max_length=1000)
     session_id: str | None = Field(default=None, max_length=64, pattern=r"^[A-Za-z0-9_-]*$")
+    # Serverless hosts do not share memory between instances, so the client may carry the
+    # conversation itself. It only ever reaches the model as user-role context.
+    session: Session | None = None
+
+    @field_validator("session")
+    @classmethod
+    def _small_session(cls, v: Session | None) -> Session | None:
+        if v is not None and (len(v.model_dump_json()) > 64_000 or len(v.turns) > 50):
+            raise ValueError("session is too large; start a new conversation")
+        return v
 
 
 def _sse(event: str, data: dict[str, Any]) -> str:
@@ -103,7 +113,11 @@ def chat(body: ChatRequest, request: Request) -> StreamingResponse:
             headers={"Retry-After": "20"},
         )
 
-    session = sessions.get_or_create(body.session_id)
+    if body.session is not None:
+        session = body.session
+        sessions.sessions[session.id] = session
+    else:
+        session = sessions.get_or_create(body.session_id)
     lock = _session_locks.setdefault(session.id, threading.Lock())
 
     def stream() -> Iterator[str]:
@@ -115,6 +129,7 @@ def chat(body: ChatRequest, request: Request) -> StreamingResponse:
                 recorder = TraceRecorder(settings.trace_dir, {"source": "api"})
                 for event in recorder.record(agent().run(body.message, session)):
                     yield _sse(event.type, event.to_json_dict())
+                yield _sse("session_state", session.model_dump())
         except Exception as exc:  # e.g. a missing API key: still end the stream cleanly
             yield _sse(ev.ERROR, {"type": ev.ERROR, "data": {"message": str(exc), "kind": "setup"}})
         finally:

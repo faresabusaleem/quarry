@@ -72,7 +72,7 @@ export async function getJson<T>(path: string): Promise<T> {
 
 /** POST a message and call onEvent for every SSE event until the stream ends. */
 export async function streamChat(
-  body: { message: string; session_id?: string | null },
+  body: { message: string; session_id?: string | null; session?: unknown },
   onEvent: (name: string, data: any) => void,
   signal?: AbortSignal,
 ): Promise<void> {

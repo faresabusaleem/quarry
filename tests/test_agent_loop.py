@@ -196,9 +196,11 @@ def test_follow_up_sees_previous_sql_in_memory(db: Database, settings: Settings)
     )
     agent2 = Agent(provider, db, settings, registry=ToolRegistry.default(python_enabled=False))
     run(agent2, "Now only delivered ones", session)
-    system = provider.calls[1]["messages"][0].content
-    assert "Conversation so far" in system
-    assert "SELECT COUNT(*) AS n FROM orders" in system
+    msgs = provider.calls[1]["messages"]
+    assert "SELECT COUNT(*)" not in msgs[0].content  # memory never enters the system prompt
+    context = msgs[1]
+    assert context.role == "user" and context.content.startswith("Context from earlier")
+    assert "SELECT COUNT(*) AS n FROM orders" in context.content
 
 
 def test_refusal(db: Database, settings: Settings) -> None:

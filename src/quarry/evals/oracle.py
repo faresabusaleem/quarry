@@ -22,10 +22,15 @@ _FREEFORM_SQL = (
 
 
 def _item_for(messages: list[Message], items: list[Item]) -> Item | None:
-    user = next((m.content for m in messages if m.role == "user"), "")
-    for item in items:
-        if user.startswith(item.question):
-            return item
+    # The question is the last user message before any tool traffic; earlier user messages
+    # may carry conversation context.
+    users = [
+        m.content for m in messages if m.role == "user" and not m.content.startswith("Context from")
+    ]
+    for user in users:
+        for item in items:
+            if user.startswith(item.question):
+                return item
     return None
 
 
