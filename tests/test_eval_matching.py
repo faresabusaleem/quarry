@@ -54,9 +54,15 @@ def test_wrong_numbers_fail_with_a_reason() -> None:
     assert not res.ok and "rev" in res.reason
 
 
-def test_gold_file_covers_every_answer_item_with_sql() -> None:
-    gold = load_gold()
-    for item in load_items():
-        if item.gold_sql:
-            assert item.id in gold, f"{item.id} missing from gold.json; run `make gold`"
-            assert gold[item.id].rows, f"{item.id} gold result is empty"
+def test_gold_files_cover_every_answer_item_with_sql() -> None:
+    from quarry.evals.benchmark import SETS
+
+    dev_ids = {i.id for i in load_items()}
+    for name, (items_path, gold_path) in SETS.items():
+        gold = load_gold(gold_path)
+        for item in load_items(items_path):
+            if item.gold_sql:
+                assert item.id in gold, f"{item.id} missing from {gold_path.name}; run `make gold`"
+                assert gold[item.id].rows, f"{item.id} gold result is empty"
+            if name == "heldout":
+                assert item.id not in dev_ids

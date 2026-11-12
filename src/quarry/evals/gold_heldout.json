@@ -1,0 +1,306 @@
+{
+ "H01": {
+  "columns": [
+   "items"
+  ],
+  "types": [
+   "BIGINT"
+  ],
+  "rows": [
+   [
+    112650
+   ]
+  ]
+ },
+ "H02": {
+  "columns": [
+   "sellers"
+  ],
+  "types": [
+   "BIGINT"
+  ],
+  "rows": [
+   [
+    349
+   ]
+  ]
+ },
+ "H03": {
+  "columns": [
+   "payment_installments",
+   "payments"
+  ],
+  "types": [
+   "INTEGER",
+   "BIGINT"
+  ],
+  "rows": [
+   [
+    1,
+    52546
+   ]
+  ]
+ },
+ "H04": {
+  "columns": [
+   "avg_value"
+  ],
+  "types": [
+   "DOUBLE"
+  ],
+  "rows": [
+   [
+    145.03443540234534
+   ]
+  ]
+ },
+ "H05": {
+  "columns": [
+   "reviews"
+  ],
+  "types": [
+   "BIGINT"
+  ],
+  "rows": [
+   [
+    40983
+   ]
+  ]
+ },
+ "H06": {
+  "columns": [
+   "avg_photos"
+  ],
+  "types": [
+   "DOUBLE"
+  ],
+  "rows": [
+   [
+    2.1889861166939797
+   ]
+  ]
+ },
+ "H07": {
+  "columns": [
+   "revenue"
+  ],
+  "types": [
+   "DECIMAL(38,2)"
+  ],
+  "rows": [
+   [
+    1001944.76
+   ]
+  ]
+ },
+ "H08": {
+  "columns": [
+   "orders"
+  ],
+  "types": [
+   "BIGINT"
+  ],
+  "rows": [
+   [
+    3344
+   ]
+  ]
+ },
+ "H09": {
+  "columns": [
+   "category",
+   "items"
+  ],
+  "types": [
+   "VARCHAR",
+   "BIGINT"
+  ],
+  "rows": [
+   [
+    "bed_bath_table",
+    11097
+   ]
+  ]
+ },
+ "H10": {
+  "columns": [
+   "month",
+   "revenue"
+  ],
+  "types": [
+   "VARCHAR",
+   "DECIMAL(38,2)"
+  ],
+  "rows": [
+   [
+    "2017-01",
+    120098.27
+   ],
+   [
+    "2017-02",
+    244959.35
+   ],
+   [
+    "2017-03",
+    368341.32
+   ],
+   [
+    "2017-04",
+    353842.98
+   ],
+   [
+    "2017-05",
+    503159.19
+   ],
+   [
+    "2017-06",
+    429916.61
+   ],
+   [
+    "2017-07",
+    492287.3
+   ],
+   [
+    "2017-08",
+    568245.79
+   ],
+   [
+    "2017-09",
+    621415.91
+   ],
+   [
+    "2017-10",
+    660179.62
+   ],
+   [
+    "2017-11",
+    1003862.14
+   ],
+   [
+    "2017-12",
+    742183.79
+   ]
+  ]
+ },
+ "H11": {
+  "columns": [
+   "orders"
+  ],
+  "types": [
+   "BIGINT"
+  ],
+  "rows": [
+   [
+    20980
+   ]
+  ]
+ },
+ "H12": {
+  "columns": [
+   "month",
+   "orders"
+  ],
+  "types": [
+   "VARCHAR",
+   "BIGINT"
+  ],
+  "rows": [
+   [
+    "2018-01",
+    7187
+   ]
+  ]
+ },
+ "H13": {
+  "columns": [
+   "share"
+  ],
+  "types": [
+   "DOUBLE"
+  ],
+  "rows": [
+   [
+    0.07876620100887842
+   ]
+  ]
+ },
+ "H14": {
+  "columns": [
+   "avg_score"
+  ],
+  "types": [
+   "DOUBLE"
+  ],
+  "rows": [
+   [
+    2.2540965207631873
+   ]
+  ]
+ },
+ "H15": {
+  "columns": [
+   "customer_state",
+   "avg_order_value"
+  ],
+  "types": [
+   "VARCHAR",
+   "DOUBLE"
+  ],
+  "rows": [
+   [
+    "CE",
+    169.17850453172204
+   ],
+   [
+    "PE",
+    157.9998623853211
+   ],
+   [
+    "BA",
+    153.7615875706215
+   ]
+  ]
+ },
+ "H16": {
+  "columns": [
+   "growth"
+  ],
+  "types": [
+   "DOUBLE"
+  ],
+  "rows": [
+   [
+    0.03086651504524962
+   ]
+  ]
+ },
+ "H17": {
+  "columns": [
+   "orders"
+  ],
+  "types": [
+   "BIGINT"
+  ],
+  "rows": [
+   [
+    44379
+   ]
+  ]
+ },
+ "H24": {
+  "columns": [
+   "review_score"
+  ],
+  "types": [
+   "INTEGER"
+  ],
+  "rows": [
+   [
+    3
+   ],
+   [
+    5
+   ]
+  ]
+ }
+}

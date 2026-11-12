@@ -41,3 +41,5 @@ evals/results/*/traces/
 evals/results/offline-smoke/
 evals/results/pilot-*/
 evals/*.log
+web/tsconfig.tsbuildinfo
+evals/results/offline-smoke-*/
