@@ -99,6 +99,7 @@ class RunContext:
 
     db: Database
     settings: Settings
+    question: str = ""  # figures the user wrote themselves need no query behind them
     queries: dict[str, QueryRecord] = field(default_factory=dict)
     python_runs: dict[str, PythonRecord] = field(default_factory=dict)
     charts: dict[str, ChartRecord] = field(default_factory=dict)

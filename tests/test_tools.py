@@ -261,3 +261,17 @@ def test_malformed_citations_are_dropped_not_fatal(ctx: RunContext) -> None:
     )
     assert res.ok, res.error
     assert [c["id"] for c in res.data["citations"] if c["id"].startswith("n")] == ["n2"]
+
+
+def test_figures_from_the_question_need_no_query(ctx: RunContext) -> None:
+    ctx.question = "Which categories grew fastest, among those with at least R$ 10,000 of revenue?"
+    call(ctx, "run_sql", sql="SELECT 'toys' AS category, 1.4492 AS growth", purpose="t")
+    res = call(
+        ctx,
+        "final_answer",
+        answer="Among categories with at least R$ 10,000, toys grew fastest (+144.9%).",
+        caveats="Q2 vs Q1 2018.",
+        result_query_id="q1",
+    )
+    assert res.ok and res.data["unverified"] == [], res.error
+    assert res.data["caveats"] == ["Q2 vs Q1 2018."]

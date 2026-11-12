@@ -255,3 +255,10 @@ GLOSSARY = """\
 - Customer: a person is customers.customer_unique_id (customer_id changes per order).
 - Category: use the English name, category_translation.product_category_name_english.
 - Region: Brazilian states (customer_state / seller_state)."""
+
+# SQL dialect notes given to both the agent and the baseline.
+DIALECT_TIPS = """\
+DuckDB SQL. Dates: date_trunc('month', ts), strftime(ts, '%Y-%m'), extract(year FROM ts),
+dayname(ts), hour(ts). Statistics are aggregates: corr(x, y), stddev(x), quantile_cont(x, 0.5),
+regr_slope(y, x); compute them over all rows in SQL rather than pulling raw rows out.
+QUALIFY, GROUP BY ALL and FILTER (WHERE ...) are available."""

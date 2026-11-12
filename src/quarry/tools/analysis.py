@@ -76,6 +76,12 @@ class RunPythonTool(Tool):
         if not res.ok:
             return ToolResult.fail(f"{pid} failed: {res.error}", data=rec.to_dict())
         body = ""
+        truncated = [sid for sid in args.inputs if getattr(ctx.source(sid), "truncated", False)]
+        if truncated:
+            body += (
+                f"WARNING: {', '.join(truncated)} hit the 1,000-row cap, so df_ holds a partial "
+                "sample. Aggregate in SQL instead (corr, stddev, quantile_cont ...).\n"
+            )
         if res.stdout.strip():
             body += "stdout:\n" + res.stdout.strip()[:3000] + "\n"
         if res.columns:

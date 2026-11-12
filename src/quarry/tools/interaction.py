@@ -90,6 +90,8 @@ class FinalAnswerArgs(BaseModel):
         all (a model citing a seller id, say) are dropped. Figures in the text are verified
         independently by auto-grounding, so nothing unverified slips through this way.
         """
+        if isinstance(data, dict) and isinstance(data.get("caveats"), str):
+            data = {**data, "caveats": [data["caveats"]] if data["caveats"].strip() else []}
         if not isinstance(data, dict) or not isinstance(data.get("citations"), list):
             return data
         kept = []
@@ -218,6 +220,7 @@ def auto_ground(
     new: list[Citation] = []
     unmatched: list[str] = []
     counter = 0
+    question_digits = {re.sub(r"\D", "", f) for f in _FIGURE.findall(ctx.question)} - {""}
 
     def repl(m: re.Match[str]) -> str:
         nonlocal counter
@@ -228,6 +231,8 @@ def auto_ground(
             "." in fig or "%" in fig or "R$" in fig or len(digits) >= 3 or fig[-1:] in "KMB"
         )
         if is_year or not significant:
+            return m.group(0)
+        if digits and digits in question_digits:  # the user's own threshold, e.g. "R$ 10,000"
             return m.group(0)
         for sid in order:
             src = ctx.source(sid)

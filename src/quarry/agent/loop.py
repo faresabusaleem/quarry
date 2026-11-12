@@ -86,8 +86,8 @@ class Agent:
         """Answer one user message. Yields events; the last one is always run_finished."""
         session = session or Session()
         st = RunState(run_id=uuid.uuid4().hex[:12])
-        ctx = RunContext(db=self.db, settings=self.settings)
         question = session.effective_question(message)
+        ctx = RunContext(db=self.db, settings=self.settings, question=question)
         turn = Turn(run_id=st.run_id, question=question)
 
         def emit(kind: str, data: dict[str, Any] | None = None) -> Event:

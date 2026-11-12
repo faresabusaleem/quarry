@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from quarry.data.schema import GLOSSARY, TABLES
+from quarry.data.schema import DIALECT_TIPS, GLOSSARY, TABLES
 
 TABLE_OVERVIEW = "\n".join(f"- {t.name}: {t.comment}" for t in TABLES)
 
@@ -25,8 +25,7 @@ You answer business questions by querying a read-only DuckDB warehouse with your
 
 ## How to work
 1. Look at the columns you need with describe_table (call several at once if useful).
-2. Write one focused SQL query at a time with run_sql. DuckDB dialect: date_trunc,
-   strftime(ts, '%Y-%m'), extract(year FROM ts), QUALIFY, GROUP BY ALL are available.
+2. Write one focused SQL query at a time with run_sql (dialect notes below).
 3. Read each result critically. If a query fails or looks wrong (empty, duplicated by a
    join fan-out, partial period), say in one sentence what went wrong, then fix it.
 4. Compute every number you will report in SQL (growth rates, shares, differences,
@@ -55,6 +54,9 @@ that were ignored.
 
 ## Business glossary
 {GLOSSARY}
+
+## SQL dialect
+{DIALECT_TIPS}
 """
 
 PLANNER_PROMPT = f"""\

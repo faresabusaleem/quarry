@@ -16,7 +16,7 @@ from typing import Any
 import duckdb
 
 from quarry.config import Settings
-from quarry.data.schema import GLOSSARY, TABLES
+from quarry.data.schema import DIALECT_TIPS, GLOSSARY, TABLES
 from quarry.llm.base import LLMProvider, Message, ProviderError, Usage
 from quarry.llm.factory import paid_equivalent_usd
 from quarry.tools.db import Database, execute_with_limits
@@ -49,6 +49,9 @@ Reply with a JSON object:
 
 ## Business glossary
 {GLOSSARY}
+
+## SQL dialect
+{DIALECT_TIPS}
 """
 
 BASELINE_SCHEMA = {
