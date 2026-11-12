@@ -178,6 +178,7 @@ export function TurnView({
             </span>
           )}
           {turn.runId && <a href={`/traces/?id=${turn.runId}`}>Trace</a>}
+          {turn.runId && <a href={`/?run=${turn.runId}`}>Permalink</a>}
         </p>
       )}
     </article>

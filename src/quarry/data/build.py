@@ -255,6 +255,7 @@ def write_schema_doc(db_path: Path) -> None:
         out.append("")
     con.close()
     path = ROOT / "docs" / "schema.md"
+    path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(out))
     print(f"wrote {path.relative_to(ROOT)}")
 

@@ -6,7 +6,7 @@ import type { Selection } from "@/components/Answer";
 import { IconArrow, IconSend } from "@/components/icons";
 import { DatasetPanel, SourceInspector } from "@/components/Inspector";
 import { TurnView } from "@/components/TurnView";
-import { getJson, RateLimitError, streamChat, type SchemaInfo, type SourceRecord } from "@/lib/api";
+import { getJson, RateLimitError, streamChat, type AgentEvent, type SchemaInfo, type SourceRecord } from "@/lib/api";
 import { applyEvent, newTurn, type Turn } from "@/lib/run";
 
 const FALLBACK_EXAMPLES = [
@@ -33,6 +33,20 @@ export default function AskPage() {
 
   useEffect(() => {
     getJson<SchemaInfo>("/api/schema").then(setSchema).catch(() => setSchema(null));
+  }, []);
+
+  // /?run=<id> replays a saved run from its trace, so any analysis can be shared by link.
+  useEffect(() => {
+    const runId = new URLSearchParams(window.location.search).get("run");
+    if (!runId || !/^[a-z0-9]+$/i.test(runId)) return;
+    getJson<{ events: AgentEvent[] }>(`/api/traces/${runId}`)
+      .then((trace) => {
+        const first = trace.events[0];
+        let turn = newTurn(String(first?.data?.message ?? first?.data?.question ?? ""));
+        for (const e of trace.events) turn = applyEvent(turn, e);
+        setTurns([turn]);
+      })
+      .catch(() => setTurns([{ ...newTurn("Saved run"), status: "error", error: { message: `Run ${runId} was not found.` } }]));
   }, []);
 
   const lastSteps = turns[turns.length - 1]?.steps.length;
