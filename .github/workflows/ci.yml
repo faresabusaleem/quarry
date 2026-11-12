@@ -26,6 +26,7 @@ jobs:
         run: |
           uv run ruff check src tests
           uv run ruff format --check src tests
+          uv run mypy src
 
       # The sandbox isolates run_python in an unprivileged network namespace. Ubuntu 24.04
       # blocks those by default through AppArmor; allow them so the sandbox tests run here.
