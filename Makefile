@@ -1,7 +1,7 @@
 .PHONY: install data gold test lint format eval eval-smoke report serve web web-build mcp docker clean
 
 install:
-	uv sync --all-extras
+	uv sync
 	cd web && npm install
 
 data:  ## download the Olist dataset and build data/quarry.duckdb

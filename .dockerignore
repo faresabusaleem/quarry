@@ -1,0 +1,16 @@
+.git
+.venv
+**/__pycache__
+.pytest_cache
+.ruff_cache
+.env
+.env.*
+data/raw
+data/*.duckdb
+traces
+web/node_modules
+web/.next
+web/out
+evals/results/*/traces
+evals/*.log
+.claude

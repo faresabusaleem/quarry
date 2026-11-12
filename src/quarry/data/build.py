@@ -140,7 +140,7 @@ def download() -> None:
     try:
         import kagglehub
     except ImportError:  # pragma: no cover - depends on optional extra
-        sys.exit("kagglehub is not installed; run `uv sync --extra data`")
+        sys.exit("kagglehub is not installed; run `uv sync`")
     print(f"downloading {KAGGLE_DATASET} from Kaggle ...")
     src = Path(kagglehub.dataset_download(KAGGLE_DATASET))
     RAW_DIR.mkdir(parents=True, exist_ok=True)

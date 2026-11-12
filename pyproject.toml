@@ -19,10 +19,8 @@ dependencies = [
     "numpy>=1.26",
     "scipy>=1.13",
     "python-dotenv>=1.0",
+    "kagglehub>=0.3",  # anonymous download of the public dataset at build time
 ]
-
-[project.optional-dependencies]
-data = ["kagglehub>=0.3"]
 
 [dependency-groups]
 dev = [
@@ -34,6 +32,10 @@ dev = [
 
 [project.scripts]
 quarry = "quarry.cli:main"
+
+# Vercel: main.py is the entrypoint; the build bakes the warehouse and the static UI in.
+[tool.vercel.scripts]
+build = "sh scripts/vercel_build.sh"
 
 [build-system]
 requires = ["hatchling"]
