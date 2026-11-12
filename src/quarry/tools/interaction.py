@@ -49,7 +49,8 @@ class Citation(BaseModel):
 
 class FinalAnswerArgs(BaseModel):
     status: Literal["answered", "refused"] = Field(
-        description="'answered' for an analysis; 'refused' when the request is out of scope or unsafe."
+        default="answered",
+        description="'answered' for an analysis; 'refused' when the request is out of scope or unsafe.",
     )
     answer: str = Field(
         description=(
