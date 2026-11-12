@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Any
 
 from quarry.config import get_settings
-from quarry.evals.benchmark import load_gold, load_items
+from quarry.evals.benchmark import SETS, load_gold, load_items
 from quarry.evals.matching import match
 from quarry.evals.runner import RESULTS, decide
 from quarry.tools.db import Database, execute_with_limits, to_jsonable
@@ -34,8 +34,10 @@ def _trace_sources(run_dir: Path, rec: dict[str, Any]) -> dict[str, dict[str, An
 
 
 def rescore(run_dir: Path, system: str, db: Database) -> tuple[int, int]:
-    items = {i.id: i for i in load_items()}
-    gold = load_gold()
+    meta = json.loads((run_dir / "meta.json").read_text())
+    items_path, gold_path = SETS[meta.get("set", "dev")]
+    items = {i.id: i for i in load_items(items_path)}
+    gold = load_gold(gold_path)
     path = run_dir / f"{system}.jsonl"
     recs = [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
     changed = 0

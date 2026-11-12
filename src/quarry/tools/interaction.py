@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import math
 import re
 from typing import Any, Literal
@@ -83,20 +84,46 @@ class FinalAnswerArgs(BaseModel):
 
     @model_validator(mode="before")
     @classmethod
-    def _lenient_citations(cls, data: Any) -> Any:
-        """Be forgiving about input: a malformed citation must not sink a correct analysis.
+    def _lenient(cls, data: Any) -> Any:
+        """Be forgiving about input: if there is an answer, nothing else can sink it.
 
-        Values written as strings ("R$ 1,234") are parsed; citations that are not numbers at
-        all (a model citing a seller id, say) are dropped. Figures in the text are verified
-        independently by auto-grounding, so nothing unverified slips through this way.
+        Small models send lists as JSON strings, a caveat as a plain string, seller ids as
+        citation values. Each is coerced or dropped here. Dropping is safe because every
+        figure in the text is verified independently by auto-grounding.
         """
-        if isinstance(data, dict) and isinstance(data.get("caveats"), str):
-            data = {**data, "caveats": [data["caveats"]] if data["caveats"].strip() else []}
-        if not isinstance(data, dict) or not isinstance(data.get("citations"), list):
+        if not isinstance(data, dict):
             return data
+        d = dict(data)
+        status = str(d.get("status") or "answered").lower()
+        d["status"] = "refused" if status.startswith("refus") else "answered"
+        if not isinstance(d.get("answer"), str):
+            d["answer"] = "" if d.get("answer") is None else str(d["answer"])
+        for key in ("citations", "chart_ids", "caveats"):
+            value = d.get(key)
+            if isinstance(value, str):
+                try:
+                    parsed = json.loads(value)
+                except json.JSONDecodeError:
+                    parsed = None
+                if isinstance(parsed, list):
+                    value = parsed
+                elif key == "citations":
+                    value = []
+                else:
+                    value = [value] if value.strip() else []
+            elif value is None:
+                value = []
+            elif not isinstance(value, list):
+                value = [] if key == "citations" else [value]
+            d[key] = value
+        d["chart_ids"] = [str(x) for x in d["chart_ids"] if isinstance(x, str | int)]
+        d["caveats"] = [str(x) for x in d["caveats"] if x is not None and str(x).strip()]
+        if not isinstance(d.get("result_query_id"), str):
+            d["result_query_id"] = None
+
         kept = []
-        answer = str(data.get("answer", ""))
-        for c in data["citations"]:
+        answer = d["answer"]
+        for c in d["citations"]:
             if not isinstance(c, dict) or not isinstance(c.get("id"), str):
                 continue
             value = _as_number(c.get("value"))
@@ -109,7 +136,7 @@ class FinalAnswerArgs(BaseModel):
                 kept.append({**c, "value": value, "text": str(c.get("text", value))})
             else:  # put the words the model meant back in place of its marker
                 answer = answer.replace(f"[{c['id']}]", str(c.get("text", "")))
-        return {**data, "citations": kept, "answer": answer}
+        return {**d, "citations": kept, "answer": answer}
 
 
 _MARKER = re.compile(r"\[([na]\d+)\]")
@@ -289,6 +316,8 @@ class FinalAnswerTool(Tool):
 
     def run(self, args: FinalAnswerArgs, ctx: RunContext) -> ToolResult:
         fold_problems: list[str] = []
+        # A chart that does not exist is simply not shown; it is no reason to reject an answer.
+        args = args.model_copy(update={"chart_ids": [c for c in args.chart_ids if c in ctx.charts]})
         if args.status == "answered":
             folded, fold_problems = fold_inline_figures(args.answer, args.citations)
             preferred = [
@@ -339,7 +368,4 @@ class FinalAnswerTool(Tool):
                 problems.append(
                     f"result_query_id {args.result_query_id!r} is not a successful result."
                 )
-        for cid in args.chart_ids:
-            if cid not in ctx.charts:
-                problems.append(f"unknown chart id {cid!r}.")
         return problems

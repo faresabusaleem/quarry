@@ -18,6 +18,11 @@ from quarry.tools.db import Database, execute_with_limits, to_jsonable
 HERE = Path(__file__).parent
 BENCHMARK = HERE / "benchmark.yaml"
 GOLD = HERE / "gold.json"
+# The held-out set was written after the last change to prompts, glossary and loop, and is
+# run once per frozen version. It is never used to decide what to change.
+HELDOUT = HERE / "heldout.yaml"
+GOLD_HELDOUT = HERE / "gold_heldout.json"
+SETS = {"dev": (BENCHMARK, GOLD), "heldout": (HELDOUT, GOLD_HELDOUT)}
 
 
 class Item(BaseModel):
@@ -70,16 +75,24 @@ def load_gold(path: Path = GOLD) -> dict[str, Gold]:
 
 
 def main() -> None:
+    import argparse
+
     from quarry.config import get_settings
 
+    parser = argparse.ArgumentParser(description="Recompute gold results from the gold SQL.")
+    parser.add_argument("--set", choices=sorted(SETS), default="dev")
+    args = parser.parse_args()
+    items_path, gold_path = SETS[args.set]
     settings = get_settings()
-    items = load_items()
+    items = load_items(items_path)
     gold = build_gold(Database(settings.db_path), items)
-    GOLD.write_text(json.dumps({k: v.model_dump() for k, v in gold.items()}, indent=1, default=str))
+    gold_path.write_text(
+        json.dumps({k: v.model_dump() for k, v in gold.items()}, indent=1, default=str)
+    )
     counts: dict[str, int] = {}
     for i in items:
         counts[i.category] = counts.get(i.category, 0) + 1
-    print(f"{len(items)} items, {len(gold)} with gold results -> {GOLD.name}")
+    print(f"{len(items)} items, {len(gold)} with gold results -> {gold_path.name}")
     print(", ".join(f"{k}: {v}" for k, v in counts.items()))
 
 

@@ -25,7 +25,7 @@ from quarry.agent.trace import TraceRecorder
 from quarry.config import ROOT, Settings, get_settings
 from quarry.data.build import INJECTION_CANARIES
 from quarry.evals.baseline import run_baseline
-from quarry.evals.benchmark import Gold, Item, load_gold, load_items
+from quarry.evals.benchmark import SETS, Gold, Item, load_gold, load_items
 from quarry.evals.matching import match
 from quarry.llm.base import LLMProvider
 from quarry.llm.factory import get_provider
@@ -280,8 +280,9 @@ def run(
     settings: Settings,
     resume: bool = True,
     log: Callable[[str], None] = print,
+    gold_path: Path | None = None,
 ) -> Path:
-    gold = load_gold()
+    gold = load_gold(gold_path) if gold_path else load_gold()
     out_dir.mkdir(parents=True, exist_ok=True)
     path = out_dir / f"{system}.jsonl"
     done = _done_ids(path) if resume else set()
@@ -314,10 +315,12 @@ def main() -> None:
     parser.add_argument(
         "--offline", action="store_true", help="CI smoke test with an oracle fake LLM"
     )
+    parser.add_argument("--set", choices=sorted(SETS), default="dev", help="question set")
     args = parser.parse_args()
 
     settings = get_settings()
-    items = load_items()
+    items_path, gold_path = SETS[args.set]
+    items = load_items(items_path)
     if args.ids:
         wanted = set(args.ids.split(","))
         items = [i for i in items if i.id in wanted]
@@ -329,7 +332,7 @@ def main() -> None:
     if args.offline:
         from quarry.evals.oracle import oracle_provider
 
-        provider: LLMProvider = oracle_provider(items)
+        provider: LLMProvider = oracle_provider(items, gold_path)
         run_name = args.run or "offline-smoke"
     else:
         provider = get_provider(settings)
@@ -346,6 +349,7 @@ def main() -> None:
         "provider": provider.name,
         "model": provider.model,
         "items": len(items),
+        "set": args.set,
         "started": time.strftime("%Y-%m-%d %H:%M:%S"),
         "max_steps": settings.max_steps,
     }
@@ -364,6 +368,7 @@ def main() -> None:
                 db=db,
                 settings=settings,
                 resume=not args.fresh,
+                gold_path=gold_path,
             )
             continue
         run(
@@ -374,6 +379,7 @@ def main() -> None:
             db=db,
             settings=settings,
             resume=not args.fresh,
+            gold_path=gold_path,
         )
 
     from quarry.evals.report import summarize_run

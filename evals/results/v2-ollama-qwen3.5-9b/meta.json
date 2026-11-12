@@ -1,0 +1,9 @@
+{
+ "run": "v2-ollama-qwen3.5-9b",
+ "commit": "121c307",
+ "provider": "ollama",
+ "model": "qwen3.5:9b",
+ "items": 89,
+ "started": "2026-11-12 22:28:09",
+ "max_steps": 14
+}

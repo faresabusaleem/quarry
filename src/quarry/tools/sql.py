@@ -33,8 +33,9 @@ class RunSqlTool(Tool):
         "...) that you cite in the final answer, the columns, and a preview of the rows. "
         "Results are capped at 1,000 rows and queries time out after a few seconds. Compute "
         "every number you will report in SQL, including growth rates, shares and differences. "
-        "Follow the glossary: revenue, order counts and 'sold' exclude canceled and "
-        "unavailable orders; payments, reviews and the catalogue do not."
+        "Follow the glossary: only revenue, order counts and 'sold' exclude canceled and "
+        "unavailable orders; freight, payments, reviews, product attributes, sellers and "
+        "customers do not."
     )
     Args = RunSqlArgs
 

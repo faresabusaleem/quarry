@@ -8,6 +8,7 @@ A perfect oracle should score 100%; anything less is a bug in the harness, not t
 from __future__ import annotations
 
 import json
+from pathlib import Path
 from typing import Any
 
 from quarry.evals.benchmark import Item, load_gold
@@ -42,8 +43,8 @@ def _first_number(rows: list[list[Any]]) -> float | None:
     return None
 
 
-def oracle_provider(items: list[Item]) -> FakeProvider:
-    gold = load_gold()
+def oracle_provider(items: list[Item], gold_path: Path | None = None) -> FakeProvider:
+    gold = load_gold(gold_path) if gold_path else load_gold()
 
     def script(
         messages: list[Message], tools: list[ToolSpec] | None, schema: dict[str, Any] | None

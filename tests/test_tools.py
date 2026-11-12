@@ -275,3 +275,19 @@ def test_figures_from_the_question_need_no_query(ctx: RunContext) -> None:
     )
     assert res.ok and res.data["unverified"] == [], res.error
     assert res.data["caveats"] == ["Q2 vs Q1 2018."]
+
+
+def test_answer_survives_malformed_list_fields(ctx: RunContext) -> None:
+    call(ctx, "run_sql", sql="SELECT TIMESTAMP '2016-09-04 21:15:19' AS first_order", purpose="t")
+    res = call(
+        ctx,
+        "final_answer",
+        status="answered",
+        answer="The first order was placed on September 4, 2016 at 21:15:19.",
+        citations='[{"id": "n1", "text": "September 4", "value": 2016-09-04T21:15:19, "source_id": "q1"}]',
+        chart_ids="c9",
+        result_query_id=7,
+    )
+    assert res.ok and res.terminal, res.error
+    assert res.data["citations"] == []
+    assert res.data["result_query_id"] is None
