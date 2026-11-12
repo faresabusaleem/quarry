@@ -30,6 +30,10 @@ def test_month_and_date_representations() -> None:
     assert match(["month", "n"], [["2018-01", 5.0]], ["m", "n"], [["2018-01-01", 5]]).ok
     assert match(["first"], [["2016-09-04T21:15:19"]], ["first"], [["2016-09-04 21:15:19"]]).ok
     assert match(["year", "rev"], [[2017, 1.5]], ["y", "rev"], [["2017-01-01", 1.5]]).ok
+    # a day answers a timestamp question at the precision it shows
+    assert match(["first"], [["2016-09-04T21:15:19"]], ["d"], [["2016-09-04T00:00:00"]]).ok
+    assert not match(["first"], [["2016-09-04T21:15:19"]], ["d"], [["2016-09-05"]]).ok
+    assert not match(["t"], [["2016-09-04T21:15:19"]], ["t"], [["2016-09-04T10:00:00"]]).ok
 
 
 def test_values_level_fallback_for_differently_written_labels() -> None:

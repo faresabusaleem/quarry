@@ -58,11 +58,20 @@ def normalize(v: Any) -> Any:
 
 
 def _date_eq(a: str, b: str) -> bool:
+    """Compare at the precision both sides share.
+
+    '2018-01' equals '2018-01-01' (a month written as its first day), and a day equals any
+    timestamp on that day ('2016-09-04' vs '2016-09-04T21:15:19'): an answer given to the
+    day is not wrong because the gold kept the clock time.
+    """
     if a == b:
         return True
     short, long = (a, b) if len(a) < len(b) else (b, a)
-    # '2018-01' vs '2018-01-01'; '2018-01-05' vs '2018-01-05T...' never reaches here.
-    return bool(re.fullmatch(r"\d{4}-\d{2}", short)) and long == f"{short}-01"
+    if re.fullmatch(r"\d{4}-\d{2}", short):
+        return long == f"{short}-01"
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}", short):
+        return long.startswith(f"{short}T")
+    return False
 
 
 def value_eq(g: Any, p: Any, scale: float = 1.0) -> bool:
