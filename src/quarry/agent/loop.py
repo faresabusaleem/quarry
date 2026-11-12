@@ -346,7 +346,9 @@ class Agent:
                     st.consecutive_failures += 1
                     key = _failure_key(call.name, call.arguments, result.error or "")
                     st.failures[key] += 1
-                    if st.failures[key] >= 2:
+                    # final_answer has its own escalation (reject twice, then accept with
+                    # the unverified numbers flagged), so the repeat stop skips it.
+                    if st.failures[key] >= 2 and call.name != "final_answer":
                         st.status = "stopped"
                         yield emit(
                             ev.ERROR,

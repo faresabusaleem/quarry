@@ -164,3 +164,32 @@ def test_value_matching_allows_rounding_and_percent() -> None:
     assert value_in_result(18.34, rows, 2)  # share shown as a percentage
     assert value_in_result(2, rows, 2)  # row count
     assert not value_in_result(1300000, rows, 2)
+
+
+def test_figure_written_next_to_its_marker_is_folded(ctx: RunContext) -> None:
+    call(ctx, "run_sql", sql="SELECT 2960471.25 AS revenue, 0.184 AS share", purpose="t")
+    res = call(
+        ctx,
+        "final_answer",
+        answer="SP had R$ 2,960,471.25 [n1], a 18.4% [n2] share.",
+        citations=[
+            {"id": "n1", "text": "R$ 2.96M", "value": 2960471.25, "source_id": "q1"},
+            {"id": "n2", "text": "18.4%", "value": 0.184, "source_id": "q1"},
+        ],
+        result_query_id="q1",
+    )
+    assert res.ok and res.data["unverified"] == []
+    assert res.data["answer"] == "SP had [n1], a [n2] share."
+
+
+def test_figure_that_disagrees_with_its_citation_is_rejected(ctx: RunContext) -> None:
+    call(ctx, "run_sql", sql="SELECT 2960471.25 AS revenue", purpose="t")
+    res = call(
+        ctx,
+        "final_answer",
+        answer="SP had R$ 3,500,000 [n1].",
+        citations=[{"id": "n1", "text": "R$ 2.96M", "value": 2960471.25, "source_id": "q1"}],
+        result_query_id="q1",
+    )
+    assert not res.ok
+    assert "does not match its cited value" in res.error

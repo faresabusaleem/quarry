@@ -101,6 +101,53 @@ def _numeric_cells(rows: list[list[Any]]) -> list[float]:
     return out
 
 
+_FIGURE_BEFORE_MARKER = re.compile(
+    r"(?P<fig>(?:R\$\s?)?-?\d[\d,]*(?:\.\d+)?\s?(?:%|[KMB]\b|million\b|billion\b)?)"
+    r"\s*\(?\s*\[(?P<id>n\d+)\]\)?"
+)
+_SCALE = {"k": 1e3, "m": 1e6, "million": 1e6, "b": 1e9, "billion": 1e9}
+
+
+def _parse_figure(fig: str) -> tuple[float, bool] | None:
+    text = fig.replace("R$", "").replace(",", "").strip()
+    m = re.fullmatch(r"(-?\d+(?:\.\d+)?)\s?(%|[KMB]|million|billion)?", text, re.I)
+    if not m:
+        return None
+    value = float(m.group(1))
+    unit = (m.group(2) or "").lower()
+    if unit in _SCALE:
+        value *= _SCALE[unit]
+    return value, unit == "%"
+
+
+def fold_inline_figures(answer: str, citations: list[Citation]) -> tuple[str, list[str]]:
+    """Accept 'R$ 2,960,470 [n1]' as well as '[n1]'.
+
+    Models naturally write the figure and then the marker. If the written figure agrees with
+    the citation's value it is redundant, so it is folded into the marker (the UI shows the
+    citation text); if it disagrees, that is a grounding error worth sending back.
+    """
+    by_id = {c.id: c for c in citations}
+    problems: list[str] = []
+
+    def repl(m: re.Match[str]) -> str:
+        c = by_id.get(m.group("id"))
+        parsed = _parse_figure(m.group("fig"))
+        if c is None or parsed is None:
+            return m.group(0)
+        fig, is_pct = parsed
+        targets = [c.value, c.value * 100] if is_pct else [c.value]
+        if any(math.isclose(fig, t, rel_tol=0.02, abs_tol=0.011) for t in targets):
+            return f"[{c.id}]"
+        problems.append(
+            f"the figure {m.group('fig').strip()!r} written next to [{c.id}] does not match its "
+            f"cited value {c.value:g}."
+        )
+        return m.group(0)
+
+    return _FIGURE_BEFORE_MARKER.sub(repl, answer), problems
+
+
 def value_in_result(value: float, rows: list[list[Any]], row_count: int) -> bool:
     """True if `value` matches some cell, allowing rounding and percent scaling."""
     candidates = [*_numeric_cells(rows), float(row_count)]
@@ -126,7 +173,12 @@ class FinalAnswerTool(Tool):
     max_rejections = 2
 
     def run(self, args: FinalAnswerArgs, ctx: RunContext) -> ToolResult:
-        problems = self.validate(args, ctx)
+        if args.status == "answered":
+            folded, fold_problems = fold_inline_figures(args.answer, args.citations)
+            args = args.model_copy(update={"answer": folded})
+        else:
+            fold_problems = []
+        problems = fold_problems + self.validate(args, ctx)
         rejections = ctx._counters.get("final_rejections", 0)
         if problems and rejections < self.max_rejections:
             ctx._counters["final_rejections"] = rejections + 1

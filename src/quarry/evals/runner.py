@@ -328,8 +328,14 @@ def main() -> None:
         provider = get_provider(settings)
         run_name = args.run or re.sub(r"[^a-zA-Z0-9.-]+", "-", f"{provider.name}-{provider.model}")
     out_dir = RESULTS / run_name
+    import subprocess
+
+    commit = subprocess.run(
+        ["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, cwd=ROOT
+    ).stdout.strip()
     meta = {
         "run": run_name,
+        "commit": commit or None,
         "provider": provider.name,
         "model": provider.model,
         "items": len(items),

@@ -267,3 +267,25 @@ def test_in_run_compaction_elides_old_results(db: Database, settings: Settings) 
     )
     events = run(agent, "Show orders")
     assert any(e.type == ev.REFLECTION and e.data["kind"] == "compaction" for e in events)
+
+
+def test_repeated_answer_rejection_ends_in_flagged_answer_not_a_stop(
+    db: Database, settings: Settings
+) -> None:
+    call("run_sql", sql="SELECT COUNT(*) AS n FROM orders", purpose="count")
+    bad = final_answer(answer="There are [n1] orders, up 12.5%.")
+    agent = make_agent(
+        [
+            PLAN,
+            call("run_sql", sql="SELECT COUNT(*) AS n FROM orders", purpose="count"),
+            bad,
+            bad,
+            bad,
+        ],
+        db,
+        settings,
+    )
+    events = run(agent, "How many orders?")
+    assert events[-1].data["status"] == "answered"
+    final = next(e for e in events if e.type == ev.FINAL)
+    assert final.data["unverified"]
