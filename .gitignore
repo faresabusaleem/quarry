@@ -34,3 +34,8 @@ web/next-env.d.ts
 .DS_Store
 .idea/
 .vscode/
+
+# Eval run artefacts: per-run traces are large; the scored JSONL and summaries are committed
+evals/results/*/traces/
+evals/results/offline-smoke/
+evals/results/pilot-*/
