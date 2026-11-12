@@ -228,3 +228,36 @@ def test_figure_that_disagrees_with_its_citation_is_rejected(ctx: RunContext) ->
     )
     assert not res.ok
     assert "does not match its cited value" in res.error
+
+
+def test_ids_with_digits_are_not_figures(ctx: RunContext) -> None:
+    call(
+        ctx,
+        "run_sql",
+        sql="SELECT '4869f7a5dfa277a7dca6462dcf3b52b2' AS seller_id, 229237.63 AS revenue",
+        purpose="t",
+    )
+    res = call(
+        ctx,
+        "final_answer",
+        answer="Seller 4869f7a5dfa277a7dca6462dcf3b52b2 earned R$ 229,238.",
+        result_query_id="q1",
+    )
+    assert res.ok and res.data["unverified"] == []
+    assert "4869f7a5dfa277a7dca6462dcf3b52b2" in res.data["answer"]
+
+
+def test_malformed_citations_are_dropped_not_fatal(ctx: RunContext) -> None:
+    call(ctx, "run_sql", sql="SELECT 'abc' AS seller_id, 1234.5 AS revenue", purpose="t")
+    res = call(
+        ctx,
+        "final_answer",
+        answer="Seller [n1] earned R$ 1,234.50 [n2].",
+        citations=[
+            {"id": "n1", "text": "abc", "value": "abc", "source_id": "q1"},
+            {"id": "n2", "text": "R$ 1,234.50", "value": "R$ 1,234.50", "source_id": "q1"},
+        ],
+        result_query_id="q1",
+    )
+    assert res.ok, res.error
+    assert [c["id"] for c in res.data["citations"] if c["id"].startswith("n")] == ["n2"]

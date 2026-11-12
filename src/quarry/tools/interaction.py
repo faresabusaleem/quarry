@@ -6,7 +6,7 @@ import math
 import re
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from quarry.tools.base import RunContext, Tool, ToolResult
 
@@ -47,6 +47,20 @@ class Citation(BaseModel):
     source_id: str = Field(description="Result id that contains the value, e.g. q3 or py1.")
 
 
+def _as_number(value: Any) -> float | None:
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int | float):
+        return float(value)
+    if isinstance(value, str):
+        text = value.replace("R$", "").replace(",", "").replace("%", "").strip()
+        try:
+            return float(text)
+        except ValueError:
+            return None
+    return None
+
+
 class FinalAnswerArgs(BaseModel):
     status: Literal["answered", "refused"] = Field(
         default="answered",
@@ -66,6 +80,34 @@ class FinalAnswerArgs(BaseModel):
     )
     chart_ids: list[str] = Field(default_factory=list, description="Charts to show, e.g. ['c1'].")
     caveats: list[str] = Field(default_factory=list, description="Assumptions and data limits.")
+
+    @model_validator(mode="before")
+    @classmethod
+    def _lenient_citations(cls, data: Any) -> Any:
+        """Be forgiving about input: a malformed citation must not sink a correct analysis.
+
+        Values written as strings ("R$ 1,234") are parsed; citations that are not numbers at
+        all (a model citing a seller id, say) are dropped. Figures in the text are verified
+        independently by auto-grounding, so nothing unverified slips through this way.
+        """
+        if not isinstance(data, dict) or not isinstance(data.get("citations"), list):
+            return data
+        kept = []
+        answer = str(data.get("answer", ""))
+        for c in data["citations"]:
+            if not isinstance(c, dict) or not isinstance(c.get("id"), str):
+                continue
+            value = _as_number(c.get("value"))
+            valid = (
+                value is not None
+                and isinstance(c.get("source_id"), str)
+                and re.fullmatch(r"[na]\d+", c["id"]) is not None
+            )
+            if valid:
+                kept.append({**c, "value": value, "text": str(c.get("text", value))})
+            else:  # put the words the model meant back in place of its marker
+                answer = answer.replace(f"[{c['id']}]", str(c.get("text", "")))
+        return {**data, "citations": kept, "answer": answer}
 
 
 _MARKER = re.compile(r"\[([na]\d+)\]")
@@ -133,8 +175,10 @@ def fold_inline_figures(answer: str, citations: list[Citation]) -> tuple[str, li
     return _FIGURE_BEFORE_MARKER.sub(repl, answer), problems
 
 
+# A figure starts and ends on a word boundary, so digit runs inside identifiers such as
+# seller ids ("4869f7a5...") or zip codes in words are never mistaken for figures.
 _FIGURE = re.compile(
-    r"(?<![\w.\[-])(?P<fig>(?:R\$\s?)?-?\d[\d,]*(?:\.\d+)?(?:\s?(?:%|[KMB]\b|million\b|billion\b))?)"
+    r"(?<![\w.\[-])(?P<fig>(?:R\$\s?)?-?\d(?:[\d,]*\d)?(?:\.\d+)?(?:\s?(?:%|[KMB]\b|million\b|billion\b))?)(?!\w)"
 )
 
 
