@@ -84,8 +84,10 @@ SAFE_BUILTINS = {
 
 
 def _emit(payload: dict) -> None:
-    sys.__stdout__.write(json.dumps(payload, default=str))
-    sys.__stdout__.flush()
+    out = sys.__stdout__
+    assert out is not None  # the parent always gives the child a stdout pipe
+    out.write(json.dumps(payload, default=str))
+    out.flush()
 
 
 def _memory_watchdog(limit_bytes: int) -> None:

@@ -216,7 +216,7 @@ def trace(run_id: str) -> dict[str, Any]:
 
 @app.get("/api/evals")
 def evals() -> list[dict[str, Any]]:
-    out = []
+    out: list[dict[str, Any]] = []
     if not RESULTS.exists():
         return out
     for run_dir in sorted(RESULTS.iterdir()):

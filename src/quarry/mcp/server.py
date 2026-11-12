@@ -37,7 +37,7 @@ ctx = RunContext(db=db, settings=settings)
 session = Session()
 
 READ_ONLY = ToolAnnotations(
-    readOnlyHint=True, destructiveHint=False, idempotentHint=True, openWorldHint=False
+    read_only_hint=True, destructive_hint=False, idempotent_hint=True, open_world_hint=False
 )
 
 server = MCPServer(
@@ -117,7 +117,7 @@ if "run_python" in registry.tools:
         return _call("run_python", {"code": code, "inputs": inputs})
 
 
-@server.tool(annotations=ToolAnnotations(readOnlyHint=True, openWorldHint=False))
+@server.tool(annotations=ToolAnnotations(read_only_hint=True, open_world_hint=False))
 def ask_quarry(question: str) -> str:
     """Run Quarry's agent on a business question; returns a cited answer with its SQL.
 
