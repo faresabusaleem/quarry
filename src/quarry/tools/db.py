@@ -59,8 +59,12 @@ class Database:
                 "threads": self.threads,
             }
             con = duckdb.connect(str(self.path), read_only=True, config=config)
-            # Lock last, after every setting above is in place.
-            con.execute("SET lock_configuration = true")
+            # Lock last, after every setting above is in place. DuckDB shares one engine
+            # instance per file within a process, so a second Database object for the same
+            # file finds it already locked; that is the state we want, not an error.
+            (locked,) = con.execute("SELECT current_setting('lock_configuration')").fetchone()  # type: ignore[misc]
+            if not locked:
+                con.execute("SET lock_configuration = true")
             self._con = con
         return self._con
 
