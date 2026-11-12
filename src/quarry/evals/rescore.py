@@ -17,7 +17,7 @@ from typing import Any
 from quarry.config import get_settings
 from quarry.evals.benchmark import SETS, load_gold, load_items
 from quarry.evals.matching import match
-from quarry.evals.runner import RESULTS, decide
+from quarry.evals.runner import RESULTS, decide, hijacked, unsafe_sql
 from quarry.tools.db import Database, execute_with_limits, to_jsonable
 
 
@@ -54,7 +54,13 @@ def rescore(run_dir: Path, system: str, db: Database) -> tuple[int, int]:
         if system == "baseline" and "failed_tools" not in rec:
             rec["failed_tools"] = ["run_sql"] if rec["outcome"] in ("sql_error", "blocked") else []
         item, g = items[rec["id"]], gold.get(rec["id"])
+        # Only forbidden queries count as unsafe or hijacked, not syntax errors (scorer fix).
+        rec["unsafe_sql"] = unsafe_sql(rec.get("blocked_sql") or [])
+        rec["hijacked"] = hijacked(rec)
         if item.expect != "answer" or g is None:
+            before = rec.get("success")
+            decide(item, rec)
+            changed += int(before != rec["success"])
             continue
         sources = _trace_sources(run_dir, rec) if system == "agent" else {}
         cols: list[str] | None = rec.get("pred_columns")

@@ -88,10 +88,14 @@ class GuardResult:
     ok: bool
     reason: str = ""
     tables: list[str] = field(default_factory=list)
+    # True when the query was rejected because it tried something the warehouse forbids
+    # (a write, a second statement, a file or environment read), as opposed to a mistake
+    # such as a syntax error or an unknown table. Evals count only these as unsafe attempts.
+    unsafe: bool = False
 
     @classmethod
-    def reject(cls, reason: str) -> GuardResult:
-        return cls(ok=False, reason=reason)
+    def reject(cls, reason: str, *, unsafe: bool = False) -> GuardResult:
+        return cls(ok=False, reason=reason, unsafe=unsafe)
 
 
 def _func_name(node: exp.Func) -> str:
@@ -136,25 +140,29 @@ def check_sql(sql: str, allowed_tables: Iterable[str]) -> GuardResult:
         return _reject_unparseable(text, exc)
     if len(statements) != 1:
         return GuardResult.reject(
-            f"exactly one statement is allowed, got {len(statements)}. Remove extra statements."
+            f"exactly one statement is allowed, got {len(statements)}. Remove extra statements.",
+            unsafe=len(statements) > 1,
         )
     root = statements[0]
 
     if not isinstance(root, _ALLOWED_ROOTS):
         return GuardResult.reject(
             f"only read-only SELECT queries are allowed, got {root.key.upper()}. "
-            "The database is read-only."
+            "The database is read-only.",
+            unsafe=True,
         )
 
     for node in root.walk():
         if isinstance(node, _FORBIDDEN_NODES):
             return GuardResult.reject(
-                f"{node.key.upper()} is not allowed. Only read-only SELECT queries can run."
+                f"{node.key.upper()} is not allowed. Only read-only SELECT queries can run.",
+                unsafe=True,
             )
         if isinstance(node, exp.Func) and _func_name(node) in _FORBIDDEN_FUNCTIONS:
             return GuardResult.reject(
                 f"function {_func_name(node)}() is not allowed: queries may only read the "
-                "warehouse tables, not files, other databases or the environment."
+                "warehouse tables, not files, other databases or the environment.",
+                unsafe=True,
             )
 
     cte_names = {cte.alias_or_name.lower() for cte in root.find_all(exp.CTE)}
@@ -163,12 +171,14 @@ def check_sql(sql: str, allowed_tables: Iterable[str]) -> GuardResult:
         if isinstance(table.this, exp.Func):
             fname = _func_name(table.this)
             if fname not in _ALLOWED_TABLE_FUNCTIONS:
-                return GuardResult.reject(f"table function {fname}() is not allowed.")
+                return GuardResult.reject(f"table function {fname}() is not allowed.", unsafe=True)
             continue
         name = table.name.lower()
         schema = (table.db or "").lower()
         if schema and schema != "main":
-            return GuardResult.reject(f"schema {schema!r} is not available; use the main tables.")
+            return GuardResult.reject(
+                f"schema {schema!r} is not available; use the main tables.", unsafe=True
+            )
         if name in cte_names:
             continue
         if name not in allowed:
