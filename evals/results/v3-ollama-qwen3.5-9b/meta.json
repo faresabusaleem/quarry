@@ -1,0 +1,10 @@
+{
+ "run": "v3-ollama-qwen3.5-9b",
+ "commit": "e07bf01",
+ "provider": "ollama",
+ "model": "qwen3.5:9b",
+ "items": 89,
+ "set": "dev",
+ "started": "2026-11-13 01:28:33",
+ "max_steps": 14
+}
