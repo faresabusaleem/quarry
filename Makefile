@@ -1,8 +1,8 @@
-.PHONY: install data gold test lint format eval eval-smoke report serve web web-build mcp docker clean
+.PHONY: install data gold test lint format eval eval-smoke report readme serve web web-build mcp docker clean
 
-install:
+install:  ## Python deps, web deps and the static UI build
 	uv sync
-	cd web && npm install
+	cd web && npm ci && npm run build
 
 data:  ## download the Olist dataset and build data/quarry.duckdb
 	uv run python -m quarry.data.build
@@ -30,6 +30,9 @@ eval-smoke:  ## offline harness check with oracle fakes (no API calls)
 
 report:
 	uv run python -m quarry.evals.report $(if $(RUN),--run $(RUN),)
+
+readme:  ## regenerate the README results tables from evals/results (RUN=..., BEFORE=...)
+	uv run python -m quarry.evals.readme --run $(RUN) $(if $(BEFORE),--before $(BEFORE),)
 
 serve:  ## API on :8000 (serves the built UI too, if web/out exists)
 	uv run uvicorn quarry.api.app:app --host 0.0.0.0 --port 8000
