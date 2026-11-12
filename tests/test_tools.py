@@ -98,7 +98,7 @@ def test_make_chart_produces_vega_lite(ctx: RunContext) -> None:
     )
     assert res.ok
     spec = ctx.charts["c1"].spec
-    assert spec["$schema"].endswith("vega-lite/v5.json")
+    assert spec["$schema"].endswith("vega-lite/v6.json")
     assert spec["encoding"]["x"]["type"] == "temporal"
     assert len(spec["data"]["values"]) >= 8
 

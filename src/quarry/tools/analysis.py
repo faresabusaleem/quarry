@@ -135,6 +135,15 @@ class MakeChartTool(Tool):
             )
         if len(src.rows) > 400:
             return ToolResult.fail("too many rows to chart (max 400); aggregate first")
+        if args.color:
+            ci = src.columns.index(args.color)
+            series = {str(r[ci]) for r in src.rows}
+            # The palette has six validated colours; more series would reuse colours.
+            if len(series) > 6:
+                return ToolResult.fail(
+                    f"{len(series)} colour series is too many (max 6); keep the top 5 and "
+                    "group the rest as 'Other' in SQL, or drop the colour split"
+                )
         types = getattr(src, "types", None) or [""] * len(src.columns)
         idx = {c: i for i, c in enumerate(src.columns)}
 
@@ -171,7 +180,7 @@ class MakeChartTool(Tool):
             {"field": c, "type": ftype(c)} for c in (args.x, args.y, args.color) if c
         ]
         spec = {
-            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
             "title": args.title,
             "data": {"values": values},
             "mark": {"type": args.mark, "point": args.mark == "line"}
