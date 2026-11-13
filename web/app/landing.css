@@ -988,6 +988,10 @@ body {
 .foot-cols a:hover {
   color: var(--accent);
 }
+.foot-cols p a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 .foot-cols p {
   color: var(--text-2);
   line-height: 1.55;

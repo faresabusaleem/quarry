@@ -278,24 +278,24 @@ export default function BenchmarkPage() {
         <div>
           <dt>Task success, agent</dt>
           <dd>{pct(a.task_success)}</dd>
-          <p>Baseline {pct(b.task_success)}</p>
+          <dd className="stat-sub">Baseline {pct(b.task_success)}</dd>
         </div>
         <div>
           <dt>Only one system solved</dt>
           <dd>
             {d.agent_only} <span className="vs">vs</span> {d.baseline_only}
           </dd>
-          <p>Agent vs baseline. McNemar p = {d.p.toFixed(2)}: not significant</p>
+          <dd className="stat-sub">Agent vs baseline. McNemar p = {d.p.toFixed(2)}: not significant</dd>
         </div>
         <div>
           <dt>Answers fully verified</dt>
           <dd>{pct(a.grounded_answer_rate)}</dd>
-          <p>Up from {pct(before.agent.grounded_answer_rate)} in v1, by checking figures in code</p>
+          <dd className="stat-sub">Up from {pct(before.agent.grounded_answer_rate)} in v1, by checking figures in code</dd>
         </div>
         <div>
           <dt>Median time per question</dt>
           <dd>{secs(a.median_latency_s)}</dd>
-          <p>Baseline {secs(b.median_latency_s)}</p>
+          <dd className="stat-sub">Baseline {secs(b.median_latency_s)}</dd>
         </div>
       </dl>
 
@@ -362,12 +362,12 @@ export default function BenchmarkPage() {
 
       <section className="section">
         <h2 className="section-title">Error analysis</h2>
-        <Markdown source={(set === "dev" ? analysis.dev : analysis.heldout).replace(/^## .*\n/, "")} headingOffset={1} />
+        <Markdown source={(set === "dev" ? analysis.dev : analysis.heldout).replace(/^## .*\n/, "")} headingOffset={0} />
       </section>
 
       <section className="section">
         <h2 className="section-title">Limitations</h2>
-        <Markdown source={analysis.limitations} headingOffset={1} />
+        <Markdown source={analysis.limitations} headingOffset={0} />
       </section>
     </div>
   );

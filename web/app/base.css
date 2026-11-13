@@ -603,10 +603,12 @@ kbd {
   font-size: var(--text-lead);
   font-weight: 500;
 }
-.stats-lg p {
+.stats-lg .stat-sub {
   margin-top: var(--space-2);
   color: var(--text-2);
   font-size: var(--text-caption);
+  font-weight: 400;
+  letter-spacing: 0;
   line-height: 1.45;
 }
 
