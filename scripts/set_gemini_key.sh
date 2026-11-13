@@ -16,6 +16,19 @@ if [ -z "$KEY" ]; then
   echo "No key entered; nothing changed."
   exit 1
 fi
+# Hidden input gives no feedback, so pasting twice is easy: keep one copy.
+LEN=${#KEY}
+if [ $((LEN % 2)) -eq 0 ]; then
+  HALF=$((LEN / 2))
+  FIRST=$(printf '%s' "$KEY" | cut -c1-"$HALF")
+  SECOND=$(printf '%s' "$KEY" | cut -c$((HALF + 1))-)
+  if [ "$FIRST" = "$SECOND" ]; then
+    KEY=$FIRST
+    echo "The key was pasted twice; kept one copy."
+  fi
+  unset FIRST SECOND
+fi
+echo "Got a key of ${#KEY} characters."
 
 [ -f .env ] || cp .env.example .env
 # Rewrite .env with the key line replaced (or appended), keeping every other line.
