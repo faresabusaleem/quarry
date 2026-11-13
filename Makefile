@@ -1,4 +1,4 @@
-.PHONY: install data gold test lint format eval eval-smoke report readme serve web web-build mcp docker clean
+.PHONY: install data gold test lint format eval eval-smoke report readme site-data serve web web-build mcp docker clean
 
 install:  ## Python deps, web deps and the static UI build
 	uv sync
@@ -31,6 +31,9 @@ eval-smoke:  ## offline harness check with oracle fakes (no API calls)
 
 report:
 	uv run python -m quarry.evals.report $(if $(RUN),--run $(RUN),)
+
+site-data:  ## export the numbers, analysis and sample rows the website shows into web/lib/generated
+	uv run python scripts/export_site_data.py
 
 readme:  ## regenerate the README results tables from evals/results (RUN=..., BEFORE=..., HELDOUT=...)
 	uv run python -m quarry.evals.readme --run $(RUN) $(if $(BEFORE),--before $(BEFORE),) $(if $(HELDOUT),--heldout $(HELDOUT),)
