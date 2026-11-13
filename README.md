@@ -411,7 +411,7 @@ Needs Python 3.11+ with [uv](https://docs.astral.sh/uv/), Node 20+ and
 [Ollama](https://ollama.com). Four commands:
 
 ```bash
-git clone <this repo> quarry && cd quarry
+git clone https://github.com/faresabusaleem/quarry.git && cd quarry
 ```
 
 ```bash

@@ -1,8 +1,7 @@
 # LinkedIn post (draft)
 
 Every figure below comes from `evals/results/` (runs `v3-ollama-qwen3.5-9b` and
-`v1/v3-heldout-ollama-qwen3.5-9b`). Suggested image: `docs/img/answer-light.png`. Replace the
-link placeholder before posting.
+`v1/v3-heldout-ollama-qwen3.5-9b`). Suggested image: `docs/img/answer-light.png`.
 
 ---
 
@@ -36,4 +35,4 @@ What I found:
 Everything reproduces with `make eval`. The README has the full error analysis, including where
 the agent loses.
 
-[link to the repository]
+https://github.com/faresabusaleem/quarry
