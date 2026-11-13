@@ -8,6 +8,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 
 import { getJson, RateLimitError, streamChat, type AgentEvent } from "./api";
 import { newId, parse, serialize, STORAGE_KEY, titleFrom, type Conversation } from "./conversations";
+import { loadLocalTrace, saveLocalTrace } from "./localTrace";
 import { applyEvent, newTurn, type Turn } from "./run";
 
 export interface Selection {
@@ -104,6 +105,7 @@ export function ConversationProvider({ children }: { children: React.ReactNode }
       setSelection(null);
       const ctrl = new AbortController();
       abortRef.current = ctrl;
+      const events: AgentEvent[] = [];
       try {
         await streamChat(
           { message: text, session_id: conv.sessionId, session: conv.sessionState ?? undefined },
@@ -113,6 +115,7 @@ export function ConversationProvider({ children }: { children: React.ReactNode }
               if (typeof data.remaining_hour === "number") setRemaining(data.remaining_hour);
               return patch(id, (c) => ({ ...c, sessionId: data.session_id }));
             }
+            events.push(data as AgentEvent);
             patchTurn(id, turn.key, (t) => applyEvent(t, data as AgentEvent));
           },
           ctrl.signal,
@@ -138,6 +141,8 @@ export function ConversationProvider({ children }: { children: React.ReactNode }
           }));
         }
       } finally {
+        const runId = events.find((e) => e.run_id)?.run_id;
+        if (runId) saveLocalTrace(runId, events as never);
         setBusy(false);
         abortRef.current = null;
       }
@@ -182,14 +187,18 @@ export function ConversationProvider({ children }: { children: React.ReactNode }
       sessionState: null,
     });
     setReplayed(base([{ ...newTurn("Loading the shared run"), activity: "Loading" }]));
+    const show = (events: AgentEvent[]) => {
+      const first = events[0];
+      let turn = newTurn(String(first?.data?.question ?? first?.data?.message ?? ""));
+      for (const e of events) turn = applyEvent(turn, e);
+      setReplayed(base([turn]));
+    };
     getJson<{ events: AgentEvent[] }>(`/api/traces/${runId}`)
-      .then((trace) => {
-        const first = trace.events[0];
-        let turn = newTurn(String(first?.data?.question ?? first?.data?.message ?? ""));
-        for (const e of trace.events) turn = applyEvent(turn, e);
-        setReplayed(base([turn]));
-      })
-      .catch(() =>
+      .then((trace) => show(trace.events))
+      .catch(() => {
+        // The hosted demo may have lost it; this tab may still hold its own copy.
+        const local = loadLocalTrace(runId);
+        if (local) return show(local.events as unknown as AgentEvent[]);
         setReplayed(
           base([
             {
@@ -199,8 +208,8 @@ export function ConversationProvider({ children }: { children: React.ReactNode }
               error: { kind: "not_found", message: `Run ${runId} is not stored on this server.` },
             },
           ]),
-        ),
-      );
+        );
+      });
   }, []);
 
   const active = useMemo(() => {

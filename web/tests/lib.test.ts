@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { compactTurn, groupByDate, parse, serialize, titleFrom, type Conversation } from "../lib/conversations";
+import { summarize } from "../lib/localTrace";
 import { parseInline, parseMarkdown } from "../lib/markdown";
 import { newTurn, type Step, type Turn } from "../lib/run";
 import { duration, fixedSteps, plainAnswer, workSummary } from "../lib/summary";
@@ -128,5 +129,16 @@ describe("markdown", () => {
       { t: "link", v: "docs", href: "https://x.y" },
       { t: "text", v: "." },
     ]);
+  });
+});
+
+describe("local trace copy", () => {
+  it("rebuilds the trace summary from the run's own events", () => {
+    const events = [
+      { type: "run_started", run_id: "abc123", ts: 100, step: null, data: { question: "How many orders?", provider: "gemini", model: "m" } },
+      { type: "run_finished", run_id: "abc123", ts: 104, step: 2, data: { status: "answered", steps: 2, total_tokens: 900, cost_usd: 0.001, latency_ms: 4000 } },
+    ];
+    expect(summarize(events)).toMatchObject({ run_id: "abc123", question: "How many orders?", status: "answered", steps: 2, latency_ms: 4000, created: 100 });
+    expect(summarize([])).toBeNull();
   });
 });

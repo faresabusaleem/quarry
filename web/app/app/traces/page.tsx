@@ -13,6 +13,7 @@ import { PlainBlock, SqlBlock } from "@/components/chat/Code";
 import { ResultTable } from "@/components/chat/ResultTable";
 import { TOOLS } from "@/components/chat/StepCard";
 import { getJson } from "@/lib/api";
+import { loadLocalTrace } from "@/lib/localTrace";
 import { formatMs, formatTokens } from "@/lib/run";
 import { duration } from "@/lib/summary";
 import { buildSpans, ticks, type Span, type TraceEvent } from "@/lib/timeline";
@@ -33,6 +34,7 @@ interface Summary {
 interface Trace {
   summary: Summary;
   events: TraceEvent[];
+  local?: boolean;
 }
 
 const STATUS: Record<string, string> = { answered: "ok", refused: "plain", clarify: "plain", stopped: "bad", error: "bad", budget_exhausted: "warn" };
@@ -243,7 +245,13 @@ function TraceDetail({ id }: { id: string }) {
   useEffect(() => {
     getJson<Trace>(`/api/traces/${id}`)
       .then(setTrace)
-      .catch((e) => setError(String(e)));
+      .catch((e) => {
+        // On the hosted demo the trace may live on another server instance; this tab may
+        // still hold its own copy of the run.
+        const local = loadLocalTrace(id);
+        if (local) setTrace(local);
+        else setError(String(e));
+      });
   }, [id]);
   const built = useMemo(() => (trace ? buildSpans(trace.events) : null), [trace]);
 
@@ -293,6 +301,11 @@ function TraceDetail({ id }: { id: string }) {
         </div>
         <h1 className="trace-title">{s.message || s.question}</h1>
         <p className="muted">{new Date(s.created * 1000).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" })}</p>
+        {trace.local && (
+          <p className="trace-local">
+            Shown from this browser&apos;s copy of the run: the server instance that ran it no longer holds the trace, as happens on the hosted demo.
+          </p>
+        )}
       </header>
 
       <dl className="stats">
