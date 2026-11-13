@@ -151,10 +151,14 @@ def download() -> None:
 
 def verify_checksums(write: bool = False) -> None:
     lines = [f"{sha256(RAW_DIR / t.csv)}  {t.csv}" for t in sorted(TABLES, key=lambda t: t.csv)]
-    if write or not CHECKSUMS.exists():
+    if write:
         CHECKSUMS.write_text("\n".join(lines) + "\n")
         print(f"wrote {CHECKSUMS.relative_to(ROOT)}")
         return
+    if not CHECKSUMS.exists():
+        # The repository ships this file. If it is missing, the project root is wrong (for
+        # example an installed copy of the package was run) and nothing would be verified.
+        sys.exit(f"{CHECKSUMS} not found; run from the repository, or --write-checksums")
     expected = set(CHECKSUMS.read_text().split("\n")) - {""}
     if set(lines) != expected:
         sys.exit(
