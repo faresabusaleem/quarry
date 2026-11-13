@@ -145,7 +145,9 @@ export function TurnView({
                   ? "Ran out of steps"
                   : turn.error.kind === "RateLimitError"
                     ? "The model provider is rate limiting requests"
-                    : "This run did not finish"}
+                    : turn.error.kind === "not_found"
+                      ? "Run not available"
+                      : "This run did not finish"}
             </h3>
             <p>{turn.error.message}</p>
             {isLast && (

@@ -46,7 +46,18 @@ export default function AskPage() {
         for (const e of trace.events) turn = applyEvent(turn, e);
         setTurns([turn]);
       })
-      .catch(() => setTurns([{ ...newTurn("Saved run"), status: "error", error: { message: `Run ${runId} was not found.` } }]));
+      .catch(() =>
+        setTurns([
+          {
+            ...newTurn("Saved run"),
+            status: "error",
+            error: {
+              kind: "not_found",
+              message: `Run ${runId} is not stored on this server. The hosted demo keeps runs only temporarily, so links to them expire. Ask the question again to see a fresh run.`,
+            },
+          },
+        ]),
+      );
   }, []);
 
   const lastSteps = turns[turns.length - 1]?.steps.length;
