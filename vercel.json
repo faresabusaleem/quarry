@@ -6,5 +6,25 @@
       "maxDuration": 300,
       "excludeFiles": "{web/node_modules/**,web/.next/**,web/app/**,web/components/**,web/lib/**,web/public/**,tests/**,docs/**,data/raw/**,scripts/**,traces/**,.github/**}"
     }
-  }
+  },
+  "headers": [
+    {
+      "source": "/_next/static/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/((?!_next/static/|api/).*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0"
+        }
+      ]
+    }
+  ]
 }
