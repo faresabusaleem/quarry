@@ -758,14 +758,8 @@ body {
 .mcp {
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-  grid-template-areas:
-    "text control"
-    "code control";
-  gap: var(--space-10) var(--space-12);
-  align-items: start;
-}
-.mcp-text {
-  grid-area: text;
+  gap: var(--space-10) clamp(32px, 5vw, 80px);
+  align-items: center;
 }
 .mcp-text p {
   max-width: 34em;
@@ -781,72 +775,73 @@ body {
 .mcp-word {
   display: inline-block;
 }
-.mcp-control {
-  grid-area: control;
-  align-self: center;
-  justify-self: end;
-  display: inline-grid;
-  grid-auto-flow: row;
-  gap: 0.12em;
-  margin-right: calc(var(--gutter) * -1 - 6vw);
-  padding: 0.12em;
-  border-radius: 0.32em;
-  background: color-mix(in srgb, var(--on-primary) 10%, transparent);
-  font-size: clamp(40px, 5.2vw, 84px);
-}
-.mcp-control button {
-  padding: 0.18em 0.5em;
-  border-radius: 0.24em;
-  color: color-mix(in srgb, var(--on-primary) 60%, transparent);
-  font-weight: 600;
-  letter-spacing: -0.04em;
-  line-height: 1.05;
-  text-align: left;
-  white-space: nowrap;
-  transition:
-    background-color var(--dur-base) var(--ease-out),
-    color var(--dur-base) var(--ease-out);
-}
-.mcp-control button[aria-checked="true"] {
+.mcp-panel {
+  min-width: 0;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
   background: var(--bg);
   color: var(--text);
 }
-.mcp-control button:hover:not([aria-checked="true"]) {
-  color: var(--on-primary);
+.mcp-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 6px;
+  background: var(--fill);
+}
+.mcp-tabs button {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 40px;
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-sm);
+  color: var(--text-2);
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+.mcp-tabs button[aria-selected="true"] {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-1); /* taste-skill-ignore: inside a data-ui product fragment */
+}
+.mcp-tabs button:hover:not([aria-selected="true"]) {
+  color: var(--text);
 }
 .mcp-code {
   position: relative;
-  grid-area: code;
-  border-radius: var(--radius-md);
-  background: var(--bg);
-  color: var(--text);
+  min-height: 300px; /* the longer snippet's height, so switching tabs does not move the page */
 }
 .mcp-file {
-  padding: var(--space-3) var(--space-4) 0;
+  padding: var(--space-4) var(--space-5) 0;
   color: var(--text-2);
   font-size: 13px;
 }
 .mcp-code pre {
   margin: 0;
-  padding: var(--space-3) var(--space-4) var(--space-4);
+  padding: var(--space-3) var(--space-5) var(--space-5);
   overflow-x: auto;
-  font-size: 13px;
+  font-size: 13.5px;
   line-height: 1.65;
 }
 .mcp-code .copy {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 10px;
+  right: 10px;
+  opacity: 1;
 }
 @media (max-width: 899px) {
   .mcp {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: "text" "control" "code";
   }
-  .mcp-control {
-    justify-self: start;
-    margin-right: 0;
-    font-size: clamp(30px, 9vw, 48px);
+  .mcp-code pre {
+    font-size: 12.5px;
+  }
+  .mcp-tabs button {
+    padding: 0 var(--space-2);
+    font-size: 14px;
   }
 }
 
@@ -1043,7 +1038,6 @@ body {
     transform: none;
   }
   .btn:active,
-  .mcp-control button:active,
   .reply-chip:active {
     transform: translateY(1px);
   }
