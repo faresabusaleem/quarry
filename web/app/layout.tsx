@@ -12,7 +12,7 @@ const DESCRIPTION =
   "Quarry is an open-source AI data analyst. It plans, explores the schema, writes and fixes its own SQL, draws charts and links every number in its answer to the query behind it.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://quarry-ten-tau.vercel.app"),
+  metadataBase: new URL("https://quarry-analyst.vercel.app"),
   title: { default: "Quarry: an AI analyst that shows its work", template: "%s · Quarry" },
   description: DESCRIPTION,
   applicationName: "Quarry",

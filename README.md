@@ -16,7 +16,7 @@ does not depend on the prompt, recovery from its own errors, human clarification
 and a benchmark that measures the agent against a simple baseline with ground truth written by
 hand.
 
-**Live demo: [quarry-ten-tau.vercel.app](https://quarry-ten-tau.vercel.app)**, running on the
+**Live demo: [quarry-analyst.vercel.app](https://quarry-analyst.vercel.app)**, running on the
 Gemini free tier. The free quota allows about 60 questions a day across all visitors, so the demo
 may say its daily limit is reached. Python analysis is off on the hosted demo (see
 [Deploy](#deploy)), and links to saved runs expire there. The site is a landing page at `/` and
@@ -489,7 +489,7 @@ On both hosts `run_python` is off: they do not allow the unprivileged network na
 sandbox requires, and Quarry will not run model-written code without OS-level isolation.
 
 The Docker image has been built and smoke-tested locally. The Vercel deployment is live at
-[quarry-ten-tau.vercel.app](https://quarry-ten-tau.vercel.app).
+[quarry-analyst.vercel.app](https://quarry-analyst.vercel.app).
 
 ## Data and licences
 

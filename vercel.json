@@ -26,5 +26,18 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "quarry-ten-tau.vercel.app"
+        }
+      ],
+      "destination": "https://quarry-analyst.vercel.app/$1",
+      "permanent": true
+    }
   ]
 }
