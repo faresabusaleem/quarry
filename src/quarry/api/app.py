@@ -258,7 +258,7 @@ def evals() -> list[dict[str, Any]]:
             ]
             for system in ("agent", "baseline")
         }
-        out.append({"meta": meta, "summary": summarize_run(run_dir), "items": items})
+        out.append({"meta": meta, "summary": summarize_run(run_dir, write=False), "items": items})
     return out
 
 

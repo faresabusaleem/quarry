@@ -151,3 +151,28 @@ def test_missing_provider_is_a_clear_503_and_costs_no_quota(
     assert r.status_code == 503
     assert "GEMINI_API_KEY" in r.json()["message"]
     assert lim.status("testclient")["remaining_hour"] == 1
+
+
+def test_evals_endpoint_works_on_a_read_only_deployment(
+    client: TestClient, monkeypatch, tmp_path
+) -> None:
+    # Vercel serves the function from a read-only file system; /api/evals must not write.
+    import shutil
+
+    src = next(
+        d
+        for d in sorted(app_module.RESULTS.iterdir())
+        if (d / "agent.jsonl").exists() and not d.name.startswith(("offline-smoke", "pilot"))
+    )
+    results = tmp_path / "results"
+    shutil.copytree(src, results / src.name, ignore=shutil.ignore_patterns("traces"))
+    for path in [results, *results.rglob("*")]:
+        path.chmod(0o555 if path.is_dir() else 0o444)
+    monkeypatch.setattr(app_module, "RESULTS", results)
+    try:
+        r = client.get("/api/evals")
+        assert r.status_code == 200
+        assert r.json()[0]["summary"]["agent"]["n"] > 0
+    finally:
+        for path in [results, *results.rglob("*")]:
+            path.chmod(0o755)

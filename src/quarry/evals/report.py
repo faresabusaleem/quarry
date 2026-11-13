@@ -99,13 +99,16 @@ def metrics(recs: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
-def summarize_run(run_dir: Path) -> dict[str, dict[str, Any]]:
+def summarize_run(run_dir: Path, *, write: bool = True) -> dict[str, dict[str, Any]]:
+    """Metrics for one results folder; also saved as summary.json unless `write` is False
+    (the API serves from a read-only deployment and must not write)."""
     out = {}
     for system in ("agent", "baseline"):
         recs = load_records(run_dir / f"{system}.jsonl")
         if recs:
             out[system] = metrics(recs)
-    (run_dir / "summary.json").write_text(json.dumps(out, indent=1))
+    if write:
+        (run_dir / "summary.json").write_text(json.dumps(out, indent=1))
     return out
 
 
