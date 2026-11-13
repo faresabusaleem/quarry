@@ -1,0 +1,263 @@
+/*
+ * Quarry design tokens: the only place colours, type, spacing, radii, shadows and motion are
+ * defined. Components use these variables and never hard-code a value. docs/brand.md explains
+ * every token; web/tests/tokens.test.ts checks the text/background pairs against WCAG AA.
+ */
+
+:root {
+  /* ---- brand palette (fixed) */
+  --brand-chalk: #f4f4f1;
+  --brand-limestone: #e6e6e1;
+  --brand-border: #e2e2dc;
+  --brand-white: #ffffff;
+  --brand-graphite: #16181b;
+  --brand-graphite-muted: #5c616a;
+  --brand-mineral: #0f7a55;
+  --brand-mineral-light: #4fc795;
+
+  /* ---- light theme (default) */
+  --bg: var(--brand-chalk); /* page and sidebar */
+  --bg-sunken: #ecece7; /* code blocks, table headers on the page */
+  --surface: var(--brand-white); /* raised: composer, cards, panels */
+  --surface-hover: #f8f8f6;
+  --fill: var(--brand-limestone); /* hover and selected rows, subtle fills */
+  --fill-strong: #d9d9d2;
+  --border: var(--brand-border);
+  --border-strong: #cfcfc7;
+
+  --text: var(--brand-graphite);
+  --text-2: var(--brand-graphite-muted); /* secondary text: on bg, surface and fill */
+  --text-3: #6a6f78; /* captions and placeholders: on bg and surface only */
+  --text-inverse: var(--brand-chalk);
+
+  --accent: var(--brand-mineral); /* links, focus, active, success */
+  --accent-strong: #0b6646; /* accent text on fill and accent-subtle */
+  --accent-subtle: #e4f1ea; /* citation and selected-state background */
+  --accent-border: #b7dcc8;
+  --on-accent: var(--brand-white);
+
+  --primary: var(--brand-graphite); /* primary buttons */
+  --primary-hover: #2a2d32;
+  --on-primary: var(--brand-chalk);
+
+  --danger: #b42318;
+  --danger-subtle: #fbeceb;
+  --danger-border: #f0c8c4;
+  --warn: #8a5a00;
+  --warn-subtle: #fbf3e2;
+  --warn-border: #edd9ad;
+
+  --focus: var(--brand-mineral);
+  --scrim: rgb(22 24 27 / 0.32);
+
+  /* code (SQL) highlighting */
+  --code-bg: #f0f0ec;
+  --code-text: var(--brand-graphite);
+  --code-keyword: #0b6646;
+  --code-string: #8a4f12;
+  --code-number: #3b5f94;
+  --code-comment: #61666e;
+
+  /* charts: Graphite and Mineral first, then colour-blind-safe tones (validated in brand.md) */
+  --series-1: #16181b;
+  --series-2: #0f7a55;
+  --series-3: #9a5c9e;
+  --series-4: #c08a2e;
+  --series-5: #4a73b0;
+  --series-6: #b5544a;
+  --chart-grid: #e8e8e3;
+  --chart-axis: #c9c9c1;
+  --chart-surface: var(--surface);
+
+  /* shadows: soft and low, never glowing */
+  --shadow-1: 0 1px 2px rgb(22 24 27 / 0.05);
+  --shadow-2: 0 1px 2px rgb(22 24 27 / 0.04), 0 6px 20px -6px rgb(22 24 27 / 0.1);
+  --shadow-3: 0 2px 4px rgb(22 24 27 / 0.04), 0 18px 48px -12px rgb(22 24 27 / 0.18);
+
+  /* ---- type */
+  --font-sans: var(--font-instrument), "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --text-display: clamp(2.5rem, 1.6rem + 3.6vw, 4.5rem); /* landing hero */
+  --text-h1: clamp(1.875rem, 1.5rem + 1.2vw, 2.5rem);
+  --text-h2: clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem);
+  --text-h3: 1.125rem;
+  --text-lead: 1.125rem;
+  --text-body: 0.9375rem; /* 15px */
+  --text-small: 0.8125rem; /* 13px */
+  --text-caption: 0.75rem; /* 12px */
+  --text-mono: 0.8125rem;
+
+  --leading-tight: 1.1;
+  --leading-snug: 1.3;
+  --leading-body: 1.6;
+  --tracking-display: -0.035em;
+  --tracking-heading: -0.022em;
+  --tracking-wordmark: -0.03em;
+
+  /* ---- space (4 px base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+  --space-32: 128px;
+
+  /* ---- radius */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-full: 999px;
+
+  /* ---- layout */
+  --sidebar-w: 272px;
+  --thread-w: 760px;
+  --page-w: 1200px;
+  --header-h: 56px;
+
+  /* ---- motion */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 420ms;
+
+  color-scheme: light;
+}
+
+/* Dark theme: graphite, never pure black and never blue. Chalk text, Mineral light accent. */
+:root[data-theme="dark"] {
+  --bg: #171819;
+  --bg-sunken: #131415;
+  --surface: #1e1f21;
+  --surface-hover: #232427;
+  --fill: #28292b;
+  --fill-strong: #303235;
+  --border: #2d2f32;
+  --border-strong: #3a3c40;
+
+  --text: var(--brand-chalk);
+  --text-2: #a8abb0;
+  --text-3: #8e9196;
+  --text-inverse: var(--brand-graphite);
+
+  --accent: var(--brand-mineral-light);
+  --accent-strong: #6fd6aa;
+  --accent-subtle: #1b2f26;
+  --accent-border: #2c5a45;
+  --on-accent: var(--brand-graphite);
+
+  --primary: var(--brand-chalk);
+  --primary-hover: #e3e3de;
+  --on-primary: var(--brand-graphite);
+
+  --danger: #f2867a;
+  --danger-subtle: #2e1d1b;
+  --danger-border: #5a2e29;
+  --warn: #e3b04b;
+  --warn-subtle: #2b2415;
+  --warn-border: #54451f;
+
+  --focus: var(--brand-mineral-light);
+  --scrim: rgb(0 0 0 / 0.5);
+
+  --code-bg: #141516;
+  --code-text: #e6e6e1;
+  --code-keyword: #6fd6aa;
+  --code-string: #e2b26e;
+  --code-number: #93b4e3;
+  --code-comment: #8e9196;
+
+  --series-1: #d9d9d3;
+  --series-2: #34ad7b;
+  --series-3: #ad79c8;
+  --series-4: #c2852d;
+  --series-5: #6a94d4;
+  --series-6: #d9705f;
+  --chart-grid: #2a2c2f;
+  --chart-axis: #3d4044;
+
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.3);
+  --shadow-2: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 24px -8px rgb(0 0 0 / 0.5);
+  --shadow-3: 0 2px 6px rgb(0 0 0 / 0.3), 0 24px 56px -16px rgb(0 0 0 / 0.6);
+
+  color-scheme: dark;
+}
+
+/* Follow the system setting unless the visitor picked a theme. Same values as above. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #171819;
+    --bg-sunken: #131415;
+    --surface: #1e1f21;
+    --surface-hover: #232427;
+    --fill: #28292b;
+    --fill-strong: #303235;
+    --border: #2d2f32;
+    --border-strong: #3a3c40;
+
+    --text: var(--brand-chalk);
+    --text-2: #a8abb0;
+    --text-3: #8e9196;
+    --text-inverse: var(--brand-graphite);
+
+    --accent: var(--brand-mineral-light);
+    --accent-strong: #6fd6aa;
+    --accent-subtle: #1b2f26;
+    --accent-border: #2c5a45;
+    --on-accent: var(--brand-graphite);
+
+    --primary: var(--brand-chalk);
+    --primary-hover: #e3e3de;
+    --on-primary: var(--brand-graphite);
+
+    --danger: #f2867a;
+    --danger-subtle: #2e1d1b;
+    --danger-border: #5a2e29;
+    --warn: #e3b04b;
+    --warn-subtle: #2b2415;
+    --warn-border: #54451f;
+
+    --focus: var(--brand-mineral-light);
+    --scrim: rgb(0 0 0 / 0.5);
+
+    --code-bg: #141516;
+    --code-text: #e6e6e1;
+    --code-keyword: #6fd6aa;
+    --code-string: #e2b26e;
+    --code-number: #93b4e3;
+    --code-comment: #8e9196;
+
+    --series-1: #d9d9d3;
+    --series-2: #34ad7b;
+    --series-3: #ad79c8;
+    --series-4: #c2852d;
+    --series-5: #6a94d4;
+    --series-6: #d9705f;
+    --chart-grid: #2a2c2f;
+    --chart-axis: #3d4044;
+
+    --shadow-1: 0 1px 2px rgb(0 0 0 / 0.3);
+    --shadow-2: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 24px -8px rgb(0 0 0 / 0.5);
+    --shadow-3: 0 2px 6px rgb(0 0 0 / 0.3), 0 24px 56px -16px rgb(0 0 0 / 0.6);
+
+    color-scheme: dark;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur-base: 0ms;
+    --dur-slow: 0ms;
+  }
+}
