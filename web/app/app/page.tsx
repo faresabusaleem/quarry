@@ -30,6 +30,8 @@ function Chat() {
   // ?c=<id> opens a saved analysis; ?run=<id> replays a shared run.
   const c = params.get("c");
   const run = params.get("run");
+  // ?q=<question> comes from the landing page: filled in, not sent, so asking stays a choice.
+  const q = params.get("q") ?? "";
   useEffect(() => {
     if (run && /^[a-z0-9]+$/i.test(run)) replay(run);
     else if (c) open(c);
@@ -70,7 +72,7 @@ function Chat() {
             Quarry plans the analysis, writes and checks its own SQL on 99,441 real marketplace orders, and links every number in the answer to the query
             behind it.
           </p>
-          <Composer ref={composer} busy={busy} placeholder={placeholder} remaining={remaining} onSubmit={submit} onStop={stop} autoFocus />
+          <Composer ref={composer} busy={busy} placeholder={placeholder} remaining={remaining} onSubmit={submit} onStop={stop} autoFocus initialText={q.slice(0, 1000)} />
           <div className="suggestions" aria-labelledby="suggestions-label">
             <p id="suggestions-label" className="eyebrow">
               From the benchmark

@@ -583,29 +583,6 @@
   min-width: 46px;
   text-align: right;
 }
-.tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  height: 20px;
-  padding: 0 7px;
-  border-radius: var(--radius-full);
-  font-family: var(--font-sans);
-  font-size: 11px;
-  font-weight: 600;
-}
-.tag svg {
-  width: 12px;
-  height: 12px;
-}
-.tag-error {
-  background: var(--danger-subtle);
-  color: var(--danger);
-}
-.tag-fixed {
-  background: var(--accent-subtle);
-  color: var(--accent-strong);
-}
 .step-body {
   display: grid;
   gap: var(--space-3);
@@ -722,45 +699,6 @@
 .answer-text li + li {
   margin-top: var(--space-1);
 }
-.cite {
-  display: inline;
-  padding: 0 1px;
-  border-radius: 3px;
-  color: inherit;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  line-height: inherit;
-  text-decoration: underline dotted;
-  text-decoration-color: var(--accent);
-  text-decoration-thickness: 1.5px;
-  text-underline-offset: 4px;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
-  transition: background-color var(--dur-fast) var(--ease-out);
-}
-.cite:hover {
-  background: var(--accent-subtle);
-  text-decoration-style: solid;
-}
-.cite[aria-pressed="true"] {
-  background: var(--accent-subtle);
-  text-decoration-style: solid;
-}
-.cite-src {
-  margin-left: 1px;
-  color: var(--text-3);
-  font-family: var(--font-mono);
-  font-size: 9.5px;
-  font-weight: 500;
-  vertical-align: super;
-  line-height: 0;
-  text-decoration: none;
-  display: inline-block;
-}
-.cite:hover .cite-src,
-.cite[aria-pressed="true"] .cite-src {
-  color: var(--accent-strong);
-}
 .answer > * + * {
   margin-top: var(--space-4);
 }
@@ -832,25 +770,6 @@
   gap: var(--space-2);
   margin-top: var(--space-3);
 }
-.reply-chip {
-  min-height: 34px;
-  padding: 6px var(--space-4);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-full);
-  background: var(--bg);
-  font-size: var(--text-small);
-  font-weight: 500;
-  text-align: left;
-  transition: border-color var(--dur-fast) var(--ease-out), background-color var(--dur-fast);
-}
-.reply-chip:hover:not(:disabled) {
-  border-color: var(--accent);
-  background: var(--accent-subtle);
-}
-.reply-chip:disabled {
-  opacity: 0.55;
-}
-
 .turn-foot {
   display: flex;
   flex-wrap: wrap;

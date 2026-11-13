@@ -43,3 +43,17 @@ describe("trace timeline", () => {
     expect(ticks(900)).toEqual([0, 200, 400, 600, 800]);
   });
 });
+
+describe("stages of the showcase run", () => {
+  it("covers the whole run, each second in one stage", async () => {
+    const { stagesFromTrace } = await import("../lib/stages");
+    const events = (showcase as { events: TraceEvent[] }).events;
+    const stages = stagesFromTrace(events);
+    expect(stages.map((s) => s.key)).toEqual(["plan", "explore", "query", "chart", "answer"]);
+    expect(stages.every((s) => s.ms > 0)).toBe(true);
+    const total = stages.reduce((a, s) => a + s.ms, 0);
+    expect(Math.round(total)).toBe(Math.round(buildSpans(events).totalMs));
+    expect(stages.find((s) => s.key === "explore")?.calls).toBe(2);
+    expect(stages.find((s) => s.key === "query")?.calls).toBe(2);
+  });
+});

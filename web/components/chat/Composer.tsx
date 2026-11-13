@@ -16,9 +16,10 @@ export const Composer = forwardRef<
     onSubmit: (text: string) => void;
     onStop: () => void;
     autoFocus?: boolean;
+    initialText?: string;
   }
->(function Composer({ busy, placeholder, remaining, onSubmit, onStop, autoFocus }, ref) {
-  const [text, setText] = useState("");
+>(function Composer({ busy, placeholder, remaining, onSubmit, onStop, autoFocus, initialText = "" }, ref) {
+  const [text, setText] = useState(initialText);
   const area = useRef<HTMLTextAreaElement>(null);
   useImperativeHandle(ref, () => ({ focus: () => area.current?.focus() }));
 

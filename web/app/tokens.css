@@ -166,7 +166,7 @@
   --primary-hover: #e3e3de;
   --on-primary: var(--brand-graphite);
 
-  --danger: #f2867a;
+  --danger: #f28b8b;
   --danger-subtle: #2e1d1b;
   --danger-border: #5a2e29;
   --warn: #e3b04b;
@@ -232,7 +232,7 @@
     --primary-hover: #e3e3de;
     --on-primary: var(--brand-graphite);
 
-    --danger: #f2867a;
+    --danger: #f28b8b;
     --danger-subtle: #2e1d1b;
     --danger-border: #5a2e29;
     --warn: #e3b04b;

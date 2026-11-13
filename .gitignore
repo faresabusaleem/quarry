@@ -45,3 +45,4 @@ web/tsconfig.tsbuildinfo
 evals/results/offline-smoke-*/
 .vercel
 .env*.local
+/.taste-skill/

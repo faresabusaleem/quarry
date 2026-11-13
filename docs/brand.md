@@ -85,7 +85,7 @@ states, focus rings, links, success and the icon facet. It is never decoration.
 - Accent: `--accent` Mineral / Mineral light, `--accent-strong` `#0B6646` / `#6FD6AA` for
   accent text on fills, `--accent-subtle` `#E4F1EA` / `#1B2F26` behind cited numbers and
   selected items.
-- States: `--danger` `#B42318` / `#F2867A`, `--warn` `#8A5A00` / `#E3B04B`, each with a subtle
+- States: `--danger` `#B42318` / `#F28B8B`, `--warn` `#8A5A00` / `#E3B04B`, each with a subtle
   background and border.
 
 **Dark mode** uses graphite surfaces, never pure black and never blue-tinted (blue never
@@ -109,7 +109,7 @@ body text needs 4.5:1, focus rings and chart marks 3:1.
 | `--accent-strong` on `--accent-subtle` | 6.02 | 8.02 |
 | `--on-accent` on `--accent` | 5.34 | 8.42 |
 | `--on-primary` on `--primary` | 16.14 | 16.14 |
-| `--danger` on `--surface` | 6.57 | 6.65 |
+| `--danger` on `--surface` | 6.57 | 6.94 |
 | `--warn` on `--warn-subtle` | 5.37 | 7.74 |
 | `--code-keyword` on `--code-bg` | 6.12 | 10.34 |
 | `--code-comment` on `--code-bg` | 5.06 | 5.78 |
