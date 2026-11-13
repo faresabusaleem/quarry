@@ -100,14 +100,14 @@ export default function Home() {
         {/* ------------------------------------------------ hero */}
         <section className="hero" aria-labelledby="hero-title">
           <div className="hero-text">
-            <h1 id="hero-title" data-reveal>
+            <h1 id="hero-title">
               An analyst that shows its work
             </h1>
-            <p className="hero-sub" data-reveal>
+            <p className="hero-sub">
               Ask a question in plain English. Quarry plans the analysis, writes and checks its own SQL on 99,441 real marketplace orders, and links every
               number in its answer to the query behind it.
             </p>
-            <div className="hero-actions" data-reveal>
+            <div className="hero-actions">
               <Link href="/app/" className="btn btn-primary btn-lg">
                 Try the demo <ArrowRight aria-hidden />
               </Link>
@@ -115,7 +115,7 @@ export default function Home() {
                 View on GitHub <ArrowUpRight aria-hidden />
               </a>
             </div>
-            <p className="hero-note" data-reveal>
+            <p className="hero-note">
               This run is real: {model}, {seconds(totalS * 1000)} from question to answer. Click a number to see its query.
             </p>
           </div>

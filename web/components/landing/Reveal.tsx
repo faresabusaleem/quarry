@@ -34,7 +34,11 @@ export function Reveal() {
       },
       { rootMargin: "0px 0px -10% 0px", threshold: 0.12 },
     );
-    items.forEach((el) => io.observe(el));
+    // Anything already on screen is shown at once; the rest rises in as it scrolls into view.
+    items.forEach((el) => {
+      if (el.getBoundingClientRect().top < window.innerHeight * 0.9) el.classList.add("is-in");
+      else io.observe(el);
+    });
     return () => io.disconnect();
   }, []);
   return null;

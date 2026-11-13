@@ -882,3 +882,6 @@ kbd {
   opacity: 0.55;
 }
 
+.prose {
+  overflow-wrap: anywhere;
+}
