@@ -50,6 +50,12 @@
   --focus: var(--brand-mineral);
   --scrim: rgb(22 24 27 / 0.32);
 
+  /* logo: Graphite stone, Mineral facet, Chalk facet lines */
+  --logo-body: var(--brand-graphite);
+  --logo-facet: var(--brand-mineral);
+  --logo-lines: var(--brand-chalk);
+  --logo-text: var(--brand-graphite);
+
   /* code (SQL) highlighting */
   --code-bg: #f0f0ec;
   --code-text: var(--brand-graphite);
@@ -170,6 +176,12 @@
   --focus: var(--brand-mineral-light);
   --scrim: rgb(0 0 0 / 0.5);
 
+  /* logo reversed: Chalk stone, Mineral light facet, Graphite facet lines */
+  --logo-body: var(--brand-chalk);
+  --logo-facet: var(--brand-mineral-light);
+  --logo-lines: var(--brand-graphite);
+  --logo-text: var(--brand-chalk);
+
   --code-bg: #141516;
   --code-text: #e6e6e1;
   --code-keyword: #6fd6aa;
@@ -229,6 +241,11 @@
 
     --focus: var(--brand-mineral-light);
     --scrim: rgb(0 0 0 / 0.5);
+
+    --logo-body: var(--brand-chalk);
+    --logo-facet: var(--brand-mineral-light);
+    --logo-lines: var(--brand-graphite);
+    --logo-text: var(--brand-chalk);
 
     --code-bg: #141516;
     --code-text: #e6e6e1;

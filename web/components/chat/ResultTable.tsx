@@ -6,7 +6,8 @@ export function ResultTable({
   limit = 10,
   total,
   truncated,
-  caption,
+  caption = "Query result",
+  highlight,
 }: {
   columns: string[];
   rows: unknown[][];
@@ -14,13 +15,17 @@ export function ResultTable({
   total?: number;
   truncated?: boolean;
   caption?: string;
+  /** A value to mark in the table, e.g. the exact number behind a citation. */
+  highlight?: number;
 }) {
   const shown = rows.slice(0, limit);
   const count = total ?? rows.length;
+  const isHit = (v: unknown) =>
+    highlight !== undefined && typeof v === "number" && Math.abs(v - highlight) <= Math.max(1e-9, Math.abs(highlight) * 1e-9);
   return (
-    <>
-      <div className="result" tabIndex={0} role="region" aria-label={caption ?? "Query result"}>
-        <table>
+    <div className="result">
+      <div className="table-wrap" tabIndex={0} role="region" aria-label={caption}>
+        <table className="table">
           <thead>
             <tr>
               {columns.map((c) => (
@@ -34,8 +39,8 @@ export function ResultTable({
             {shown.map((r, i) => (
               <tr key={i}>
                 {r.map((v, j) => (
-                  <td key={j} className={typeof v === "number" ? "n" : undefined} title={String(v ?? "NULL")}>
-                    {formatCell(v)}
+                  <td key={j} className={`${typeof v === "number" ? "n" : ""} ${isHit(v) ? "hit" : ""}`} title={String(v ?? "NULL")}>
+                    {typeof v === "number" ? formatCell(v) : <span className="cell">{formatCell(v)}</span>}
                   </td>
                 ))}
               </tr>
@@ -43,11 +48,11 @@ export function ResultTable({
           </tbody>
         </table>
       </div>
-      <p className="result-caption">
+      <p className="table-caption num">
         {shown.length < count ? `First ${shown.length} of ` : ""}
         {count.toLocaleString("en-US")}
-        {truncated ? "+" : ""} row{count === 1 ? "" : "s"}
+        {truncated ? "+" : ""} {count === 1 ? "row" : "rows"}
       </p>
-    </>
+    </div>
   );
 }
