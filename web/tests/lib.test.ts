@@ -73,6 +73,8 @@ describe("summary", () => {
     expect(workSummary(t)).toBe("3 steps · recovered from 1 error · 28 s");
     t.steps = [step("1", "run_sql", "ok")];
     expect(workSummary(t)).toBe("1 step · 28 s");
+    t.steps = [];
+    expect(workSummary(t)).toBe("No queries run · 28 s");
   });
 
   it("copies an answer with its numbers in place of the markers", () => {

@@ -26,7 +26,7 @@ export function fixedSteps(steps: Step[]): Set<string> {
 
 /** The one line a finished run collapses to: "6 steps · recovered from 1 error · 28 s". */
 export function workSummary(turn: Turn, now = Date.now()): string {
-  const parts = [plural(turn.steps.length, "step")];
+  const parts = [turn.steps.length ? plural(turn.steps.length, "step") : "No queries run"];
   const errors = turn.steps.filter((s) => s.status === "error").length;
   if (errors) {
     const recovered = turn.totals?.recovered ?? (turn.status === "answered" || fixedSteps(turn.steps).size > 0);

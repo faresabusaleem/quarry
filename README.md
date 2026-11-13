@@ -1,4 +1,9 @@
-# Quarry
+<h1>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="web/public/brand/logo-reversed.svg">
+    <img alt="Quarry" src="web/public/brand/logo.svg" height="40">
+  </picture>
+</h1>
 
 **An agentic data analyst you can audit.** Ask a business question in plain English; Quarry
 plans the analysis, explores a real e-commerce warehouse, writes and fixes its own SQL, makes
@@ -14,11 +19,13 @@ hand.
 **Live demo: [quarry-ten-tau.vercel.app](https://quarry-ten-tau.vercel.app)**, running on the
 Gemini free tier. The free quota allows about 60 questions a day across all visitors, so the demo
 may say its daily limit is reached. Python analysis is off on the hosted demo (see
-[Deploy](#deploy)), and links to saved runs expire there.
+[Deploy](#deploy)), and links to saved runs expire there. The site is a landing page at `/` and
+the app at `/app`; the brand, its design tokens and their contrast checks are documented in
+[`docs/brand.md`](docs/brand.md).
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/img/answer-dark.png">
-  <img alt="Quarry answering a revenue question: the plan, four tool steps, an answer whose figures link to query q1, and a line chart" src="docs/img/answer-light.png">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/img/landing-dark.png">
+  <img alt="Quarry's landing page: the headline 'An analyst that shows its work' beside a real run, with cited figures and a bar chart, set on the Facet icon drawn large" src="docs/img/landing-light.png">
 </picture>
 
 **Measured, on a free local model (qwen3.5:9b via Ollama):** on 89 hand-graded questions the
@@ -61,6 +68,11 @@ It is also about 11 times slower. The [error analysis](#error-analysis) explains
 7. **Remembers** the conversation, so "now only for the top region" works.
 8. **Refuses** writes, emails, file access and other out-of-scope requests, and treats
    text inside the data as data, not instructions.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/img/answer-dark.png">
+  <img alt="Quarry answering 'Which 5 customer states have the highest share of late deliveries?': the work folded to one line, an answer whose figures link to query q1, and a bar chart" src="docs/img/answer-light.png" width="720">
+</picture>
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/img/clarify-dark.png">
@@ -157,7 +169,7 @@ never used to make a change. The v1 code was then run on it unchanged.
 Every figure above is computed from the per-item results in [`evals/results/`](evals/results)
 and can be reproduced with `make eval` (a full run on a local 9B model takes a few hours;
 it resumes where it stopped). The full report, including every failed item, is in
-[`docs/eval_report.md`](docs/eval_report.md); the UI has an Evaluation page with the same data.
+[`docs/eval_report.md`](docs/eval_report.md); the app's Benchmark page shows the same data.
 
 **What the numbers say.**
 
@@ -182,8 +194,8 @@ it resumes where it stopped). The full report, including every failed item, is i
   now runs the hosted demo but has not been benchmarked (see [Limitations](#limitations)).
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/img/evaluation-dark.png">
-  <img alt="The Evaluation page: headline metrics, the full metric table and task success by category for the agent and the baseline" src="docs/img/evaluation-light.png" width="720">
+  <source media="(prefers-color-scheme: dark)" srcset="docs/img/benchmark-dark.png">
+  <img alt="The Benchmark page: headline metrics with the McNemar test, then task success by category for the agent and the baseline" src="docs/img/benchmark-light.png" width="720">
 </picture>
 
 ## Architecture
@@ -241,7 +253,7 @@ query (step 5), read the binder error, looked up how orders link to sellers and 
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/img/trace-dark.png">
-  <img alt="The trace viewer: run totals, then a timeline of model calls and tool calls with durations, including a failed query and the reflection after it" src="docs/img/trace-light.png" width="720">
+  <img alt="The trace viewer: run totals, then a waterfall of model calls and tool calls on one time axis, with the failed query in red and the steps that recovered from it" src="docs/img/trace-light.png" width="720">
 </picture>
 
 Things worth looking at in the code:
