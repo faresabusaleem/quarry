@@ -43,3 +43,5 @@ evals/results/pilot-*/
 evals/*.log
 web/tsconfig.tsbuildinfo
 evals/results/offline-smoke-*/
+.vercel
+.env*.local
