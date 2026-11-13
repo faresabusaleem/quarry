@@ -262,6 +262,8 @@ class Agent:
         specs = self.registry.specs()
         nudges = 0
         forced: str | None = None
+        forced_at = 0
+        limit_s = self.settings.max_run_seconds
 
         while True:
             st.step += 1
@@ -269,7 +271,11 @@ class Agent:
                 forced = "steps"
             if forced is None and st.usage.total > self.settings.max_total_tokens:
                 forced = "token budget"
-            if forced and st.step > self.settings.max_steps + 2:
+            if forced is None and limit_s and time.perf_counter() - st.started > limit_s:
+                forced = "time"
+            if forced and not forced_at:
+                forced_at = st.step
+            if forced and st.step > forced_at + 1:
                 st.status = "budget_exhausted"
                 yield emit(ev.ERROR, {"message": f"stopped: out of {forced}", "kind": "budget"})
                 return

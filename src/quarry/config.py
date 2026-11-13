@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     provider: Literal["gemini", "ollama", "fake"] = "ollama"
     model: str | None = None  # defaults per provider, see quarry.llm.factory
     gemini_api_key: SecretStr | None = Field(default=None, alias="GEMINI_API_KEY")
+    gemini_timeout_s: float = 120.0  # per request
     gemini_rpm: int = 10  # client-side pacing; the server-side quota is shown in AI Studio
     ollama_host: str = "http://localhost:11434"
     ollama_think: bool = False
@@ -31,6 +32,9 @@ class Settings(BaseSettings):
     # Agent budgets (per run).
     max_steps: int = 14
     max_total_tokens: int = 120_000
+    # Wall-clock limit; 0 means none. A host that cuts requests off (Vercel: 300 s) sets one
+    # below its limit so a slow run still ends with an answer built from what it found.
+    max_run_seconds: float = 0
     context_token_limit: int = 24_000  # compact older turns above this estimate
 
     # SQL guardrails.

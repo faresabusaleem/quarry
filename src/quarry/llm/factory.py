@@ -34,7 +34,9 @@ def get_provider(settings: Settings) -> LLMProvider:
         from quarry.llm.gemini import GeminiProvider
 
         key = settings.gemini_api_key.get_secret_value() if settings.gemini_api_key else ""
-        return GeminiProvider(key, model, rpm=settings.gemini_rpm)
+        return GeminiProvider(
+            key, model, rpm=settings.gemini_rpm, timeout_s=settings.gemini_timeout_s
+        )
     if settings.provider == "ollama":
         from quarry.llm.ollama import OllamaProvider
 

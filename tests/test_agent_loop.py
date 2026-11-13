@@ -138,6 +138,25 @@ def test_step_budget_forces_a_final_answer(db: Database, settings: Settings) -> 
     assert events[-1].data["status"] == "answered"
 
 
+def test_time_budget_forces_a_final_answer(db: Database, settings: Settings) -> None:
+    # A host that cuts requests off sets max_run_seconds; once it passes, the next model call
+    # must produce the answer instead of another tool call.
+    provider = FakeProvider(
+        [PLAN, final_answer(citations=[], answer="Not enough data.", result_query_id=None)]
+    )
+    agent = Agent(
+        provider,
+        db,
+        settings.model_copy(update={"max_run_seconds": 1e-9}),
+        registry=ToolRegistry.default(python_enabled=False),
+    )
+    events = run(agent, "How many orders?")
+    assert provider.calls[-1]["tool_choice"] == "final_answer"
+    budget = [e for e in events if e.type == ev.REFLECTION and e.data["kind"] == "budget"]
+    assert budget and "time" in budget[0].data["message"]
+    assert events[-1].data["status"] == "answered"
+
+
 def test_model_that_stops_calling_tools_is_nudged_then_stopped(
     db: Database, settings: Settings
 ) -> None:
