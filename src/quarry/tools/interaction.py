@@ -159,7 +159,9 @@ def _numeric_cells(rows: list[list[Any]]) -> list[float]:
 
 _FIGURE_BEFORE_MARKER = re.compile(
     r"(?P<fig>(?:R\$\s?)?-?\d[\d,]*(?:\.\d+)?\s?(?:%|[KMB]\b|million\b|billion\b)?)"
-    r"\s*\(?\s*\[(?P<id>n\d+)\]\)?"
+    # Brackets around the marker are consumed only as a pair: in "(R$ 5 [n1])" the ")"
+    # closes a bracket opened before the figure and must stay in the text.
+    r"\s*(?P<open>\()?\s*\[(?P<id>n\d+)\](?(open)\))"
 )
 _SCALE = {"k": 1e3, "m": 1e6, "million": 1e6, "b": 1e9, "billion": 1e9}
 

@@ -200,7 +200,14 @@ def simplify_schema(schema: dict[str, Any]) -> dict[str, Any]:
                     merged = {k: v for k, v in node.items() if k != "anyOf"}
                     merged.update(options[0])
                     return walk(merged)
-            return {k: walk(v) for k, v in node.items() if k not in {"title", "$defs"}}
+            out: dict[str, Any] = {}
+            for k, v in node.items():
+                if k in {"title", "$defs"}:
+                    continue  # schema keywords, not data
+                # Keys under "properties" are argument names: an argument called "title"
+                # must survive, or `required` names a field the schema no longer defines.
+                out[k] = {n: walk(p) for n, p in v.items()} if k == "properties" else walk(v)
+            return out
         if isinstance(node, list):
             return [walk(v) for v in node]
         return node

@@ -1,5 +1,5 @@
 from quarry.tools.base import RunContext
-from quarry.tools.interaction import value_in_result
+from quarry.tools.interaction import Citation, fold_inline_figures, value_in_result
 from quarry.tools.registry import ToolRegistry
 
 REG = ToolRegistry.default(python_enabled=False)
@@ -14,6 +14,18 @@ def test_specs_are_plain_json_schema() -> None:
         assert spec.parameters["type"] == "object"
         assert "$defs" not in str(spec.parameters)
         assert "anyOf" not in str(spec.parameters)
+
+
+def test_every_required_argument_is_defined() -> None:
+    # Gemini rejects a tool whose `required` names a field missing from `properties`; the
+    # schema cleaner once dropped make_chart's `title` argument along with schema titles.
+    for spec in ToolRegistry.default(python_enabled=True).specs():
+        props = spec.parameters.get("properties", {})
+        missing = set(spec.parameters.get("required", [])) - set(props)
+        assert not missing, f"{spec.name}: required but undefined {missing}"
+        assert all("title" not in p for p in props.values()), spec.name
+    chart = next(s for s in REG.specs() if s.name == "make_chart")
+    assert chart.parameters["properties"]["title"]["type"] == "string"
 
 
 def test_list_tables(ctx: RunContext) -> None:
@@ -291,3 +303,13 @@ def test_answer_survives_malformed_list_fields(ctx: RunContext) -> None:
     assert res.ok and res.terminal, res.error
     assert res.data["citations"] == []
     assert res.data["result_query_id"] is None
+
+
+def test_folding_a_figure_keeps_brackets_that_belong_to_the_sentence() -> None:
+    cites = [Citation(id="n1", text="R$ 981,051", value=981051.2, source_id="q1")]
+    text, problems = fold_inline_figures("March (R$ 981,051 [n1]) and May", cites)
+    assert text == "March ([n1]) and May" and not problems
+    text, _ = fold_inline_figures("March R$ 981,051 ([n1]) and May", cites)
+    assert text == "March [n1] and May"
+    text, _ = fold_inline_figures("March R$ 981,051 [n1], May", cites)
+    assert text == "March [n1], May"
