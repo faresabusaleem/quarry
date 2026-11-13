@@ -35,4 +35,5 @@ What I found:
 Everything reproduces with `make eval`. The README has the full error analysis, including where
 the agent loses.
 
-https://github.com/faresabusaleem/quarry
+Try it (Gemini free tier, so it is rate limited): https://quarry-ten-tau.vercel.app
+Code: https://github.com/faresabusaleem/quarry

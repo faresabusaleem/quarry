@@ -11,6 +11,11 @@ does not depend on the prompt, recovery from its own errors, human clarification
 and a benchmark that measures the agent against a simple baseline with ground truth written by
 hand.
 
+**Live demo: [quarry-ten-tau.vercel.app](https://quarry-ten-tau.vercel.app)**, running on the
+Gemini free tier. The free quota allows about 60 questions a day across all visitors, so the demo
+may say its daily limit is reached. Python analysis is off on the hosted demo (see
+[Deploy](#deploy)), and links to saved runs expire there.
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/img/answer-dark.png">
   <img alt="Quarry answering a revenue question: the plan, four tool steps, an answer whose figures link to query q1, and a line chart" src="docs/img/answer-light.png">
@@ -173,8 +178,8 @@ it resumes where it stopped). The full report, including every failed item, is i
   rewriting answers.
 - **Safety held everywhere:** no injected instruction followed, no canary leaked, every unsafe
   or out-of-scope request refused, and no write or file read attempted, in any run on either set.
-- **Cost:** $0. Every run used a local model. The paid-tier column is empty because Gemini was
-  not run (see [Limitations](#limitations)).
+- **Cost:** $0. Every measured run used a local model, so the paid-tier column is empty. Gemini
+  now runs the hosted demo but has not been benchmarked (see [Limitations](#limitations)).
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/img/evaluation-dark.png">
@@ -222,7 +227,7 @@ loop:
   observe→ validate args (pydantic) → run tool → fence any database text as untrusted data
   reflect→ on error: return the error + "diagnose, then fix"; same call failing twice → stop
            on final_answer: verify every figure against the results; reject, then flag
-  budget → after max_steps or max_total_tokens, force final_answer
+  budget → after max_steps, max_total_tokens or max_run_seconds, force final_answer
 memory   → turns with their SQL; older turns summarised; clarification replies folded back
 trace    → every event streamed over SSE and saved as JSON
 ```
@@ -244,8 +249,9 @@ Things worth looking at in the code:
 - **Thought signatures.** Gemini 3.x attaches signatures to its reasoning and function-call
   steps; in the stateless Interactions API they must be sent back verbatim. The provider keeps
   raw steps in `Message.provider_state` and replays them ([`llm/gemini.py`](src/quarry/llm/gemini.py)).
-  This provider was written from the API documentation and is tested against recorded
-  responses; it has not yet been run against the live API (see [Limitations](#limitations)).
+  This provider was written from the API documentation and tested against recorded responses.
+  Since 2026-11-13 it has run the hosted demo, where runs of up to 13 calls, each replaying the
+  earlier function-call steps, work against the live API.
 - **Rate limits.** A client-side sliding-window pacer keeps requests under the configured RPM,
   and 429s back off with full jitter but never less than the server's `retryDelay`. The UI shows
   a countdown while it waits.
@@ -353,11 +359,14 @@ Written by hand from the traces, which are committed with each run. Full version
 
 ## Limitations
 
-- **One model, run locally.** Every number comes from qwen3.5:9b through Ollama on a laptop.
-  The Gemini provider (the free hosted option) was written against the documentation and tested
-  against recorded responses, but never called live, because no API key was available while
-  building. Google does not publish fixed free-tier limits per model, so the request pacer's
-  default of 10 per minute is a setting to adjust, not a measured limit.
+- **One model measured.** Every number comes from qwen3.5:9b through Ollama on a laptop. The
+  Gemini provider was first called live on 2026-11-13, for the hosted demo, and has not been
+  benchmarked. Those first live calls found a bug the recorded-response tests had missed: the
+  tool-schema cleaner dropped `make_chart`'s `title` argument while still listing it as
+  required. Gemini rejected the tool; Ollama accepted it, and no measured run failed because of
+  it. Google does not publish fixed free-tier limits. AI Studio showed 15 requests a minute and
+  500 a day for `gemini-3.5-flash-lite` on this project, and single calls took from 1 to 13
+  seconds, with occasional 503 "high demand" responses that the provider retries.
 - **Small samples.** 89 plus 25 questions, one run each. No overall difference reported here is
   statistically significant, and a 9B model changes some answers from run to run. The category
   tables have 3 to 14 items per row.
@@ -371,7 +380,9 @@ Written by hand from the traces, which are committed with each run. Full version
   ten-row ranking as its result fails. That is deliberate, since the linked result is what a
   reader checks, but it costs the agent several items whose text is right.
 - **Measured code vs shipped code.** The numbers describe commit `e07bf01`. Changes after it
-  (the parser message, a scorer fix that changed no outcome, UI fixes) are not measured.
+  are not measured: the parser message, a scorer fix that changed no outcome, UI fixes, the
+  tool-schema fix above, a fix that kept a closing bracket after a cited figure, and an
+  optional time budget per run.
 - **The Python sandbox needs OS support.** It uses `sandbox-exec` on macOS (a deprecated but
   working Apple interface) or an unprivileged network namespace on Linux. Docker and Vercel
   provide neither, so `run_python` is off there. It is process isolation, not a VM.
@@ -440,19 +451,33 @@ Open http://localhost:8000. Other targets: `make test`, `make eval`, `make eval-
 - **Docker:** `make docker`, then
   `docker run -p 8000:8000 -e QUARRY_PROVIDER=gemini -e GEMINI_API_KEY=... quarry`. The image
   downloads the dataset at build time and runs as a non-root user.
-- **Vercel (free Hobby plan):** `main.py` is the FastAPI entrypoint and
-  `scripts/vercel_build.sh` builds the warehouse and the UI. Set `QUARRY_PROVIDER=gemini`,
-  `GEMINI_API_KEY`, `QUARRY_TRUST_PROXY=true`, `QUARRY_PYTHON_ENABLED=false` and
-  `QUARRY_TRACE_DIR=/tmp/quarry-traces`. Conversation memory travels with the browser, so
-  follow-ups work on any instance.
+- **Vercel (free Hobby plan), which hosts the live demo:** `main.py` is the FastAPI entrypoint,
+  `vercel.json` selects the FastAPI preset and keeps `node_modules` out of the 500 MB function
+  bundle (it comes to about 380 MB), and `scripts/vercel_build.sh` downloads the dataset,
+  verifies its checksums and builds the warehouse and the UI. The project is connected to this
+  repository, so every push to `main` deploys. Production settings:
+  - `QUARRY_PROVIDER=gemini` and `GEMINI_API_KEY`, stored as a sensitive variable by
+    [`scripts/set_gemini_key.sh`](scripts/set_gemini_key.sh), which reads the key from a hidden
+    prompt.
+  - `QUARRY_TRUST_PROXY=true`. Vercel overwrites `X-Forwarded-For`, so per-visitor limits
+    cannot be spoofed.
+  - `QUARRY_PYTHON_ENABLED=false` and `QUARRY_TRACE_DIR=/tmp/quarry-traces`.
+  - `QUARRY_MAX_RUN_SECONDS=200`, below Vercel's 300-second limit, so a slow run is forced to
+    answer rather than cut off.
+  - `QUARRY_GEMINI_TIMEOUT_S=60` and `QUARRY_GEMINI_RPM=14`.
+  - `QUARRY_RATE_LIMIT_PER_IP_HOUR=6` and `QUARRY_RATE_LIMIT_GLOBAL_DAY=60`, sized to the
+    free quota.
+  - `QUARRY_DUCKDB_MEMORY_LIMIT=1GB`, half the function's 2 GB.
+
+  Conversation memory travels with the browser, so follow-ups work on any instance. The rate
+  limits and traces live in each instance's memory and `/tmp`. The limits are therefore
+  approximate, and saved-run links expire.
 
 On both hosts `run_python` is off: they do not allow the unprivileged network namespace the
 sandbox requires, and Quarry will not run model-written code without OS-level isolation.
 
-**There is no public demo yet.** A hosted demo needs the Gemini free tier, which has not been
-run live (see [Limitations](#limitations)). The Docker image has been built and smoke-tested
-locally. The Vercel configuration follows Vercel's FastAPI documentation but has not been
-through a real deploy.
+The Docker image has been built and smoke-tested locally. The Vercel deployment is live at
+[quarry-ten-tau.vercel.app](https://quarry-ten-tau.vercel.app).
 
 ## Data and licences
 
