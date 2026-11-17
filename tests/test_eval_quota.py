@@ -38,3 +38,19 @@ def test_only_provider_errors_are_dropped(tmp_path: Path) -> None:
     assert eq.drop_provider_errors(path, "A03") == 0  # a wrong answer is a result, kept
     assert eq.drop_provider_errors(path, "A02") == 1
     assert [r["id"] for r in eq.records(path)] == ["A01", "A03"]
+
+
+def test_a_provider_http_error_counts_as_a_provider_error(tmp_path: Path) -> None:
+    path = tmp_path / "agent.jsonl"
+    overloaded = 'Gemini 503: {"error":{"message":"high demand","code":"service_unavailable"}}'
+    rows = [
+        {"id": "C04", "outcome": "error", "failure": "error", "error": overloaded},
+        {"id": "C05", "outcome": "error", "failure": "error", "error": "Gemini rate limit (429)"},
+        {"id": "C06", "outcome": "error", "failure": "error", "error": "KeyError: 'rows'"},
+        {"id": "C07", "outcome": "sql_error", "failure": "wrong_result", "error": "Gemini 503"},
+    ]
+    path.write_text("".join(json.dumps(r) + "\n" for r in rows))
+    # An internal error and a scored outcome are results; only the provider's failures re-run.
+    assert eq.scored(path) == {"C06", "C07"}
+    assert eq.drop_provider_errors(path, "C04") == 1
+    assert eq.drop_provider_errors(path, "C06") == 0

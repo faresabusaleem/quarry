@@ -21,6 +21,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
 import time
@@ -47,9 +48,21 @@ def records(path: Path) -> list[dict]:
     return [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
 
 
+# The providers' own HTTP and transport failures (quota refused, servers overloaded). The
+# runner labels a failure provider_error only when its message says "provider", which the
+# Gemini client's messages ("Gemini 503: ...") do not, so the message is matched here too.
+_PROVIDER_FAILURE = re.compile(r"^(Gemini|Ollama) (\d{3}\b|rate limit|request failed)")
+
+
+def is_provider_error(r: dict) -> bool:
+    if r.get("failure") == "provider_error":
+        return True
+    return r.get("outcome") == "error" and bool(_PROVIDER_FAILURE.match(r.get("error") or ""))
+
+
 def scored(path: Path) -> set[str]:
     """Items with a record that is not a provider error."""
-    return {r["id"] for r in records(path) if r.get("failure") != "provider_error"}
+    return {r["id"] for r in records(path) if not is_provider_error(r)}
 
 
 def drop_provider_errors(path: Path, item_id: str) -> int:
@@ -61,7 +74,7 @@ def drop_provider_errors(path: Path, item_id: str) -> int:
         if not line.strip():
             continue
         r = json.loads(line)
-        if r["id"] == item_id and r.get("failure") == "provider_error":
+        if r["id"] == item_id and is_provider_error(r):
             dropped += 1
         else:
             keep.append(line)
