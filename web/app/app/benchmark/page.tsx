@@ -233,8 +233,13 @@ function Items({ runName }: { runName: string }) {
 
 export default function BenchmarkPage() {
   const [set, setSet] = useState<"dev" | "heldout">("dev");
-  const run = RUNS[`v3-${set}`];
-  const before = RUNS[`v1-${set}`];
+  // The published runs use a local model; the hosted demo's model was measured the same way.
+  const [model, setModel] = useState<"local" | "demo">("local");
+  const hasDemo = Boolean(RUNS["gemini-dev"] && RUNS["gemini-heldout"]);
+  const local = model === "local" || !hasDemo;
+  const run = local ? RUNS[`v3-${set}`] : RUNS[`gemini-${set}`];
+  const before = local ? RUNS[`v1-${set}`] : undefined;
+  const notes = analysis as Record<string, string>;
   const a = run.agent;
   const b = run.baseline;
   const groups = CATEGORIES.filter((c) => c in (a.by_category ?? {})).map((c) => ({
@@ -250,7 +255,7 @@ export default function BenchmarkPage() {
         <p className="eyebrow">Measured, not claimed</p>
         <h1>Benchmark</h1>
         <p className="page-lead">
-          Quarry&apos;s agent against the simplest thing that could work: single-shot text-to-SQL with the same model ({run.model}, run locally), the same schema
+          Quarry&apos;s agent against the simplest thing that could work: single-shot text-to-SQL with the same model ({run.model}{local ? ", run locally" : ", the hosted demo's model on its free tier"}), the same schema
           notes and the same business glossary. Ground truth is SQL written by hand. Every number here comes from the result files in{" "}
           <a href="https://github.com/faresabusaleem/quarry/tree/main/evals/results" target="_blank" rel="noreferrer">
             evals/results
@@ -259,6 +264,16 @@ export default function BenchmarkPage() {
         </p>
       </header>
 
+      {hasDemo && (
+        <div className="segmented set-switch" role="radiogroup" aria-label="Model">
+          <button type="button" role="radio" aria-checked={local} onClick={() => setModel("local")}>
+            Local model · {RUNS["v3-dev"].model}
+          </button>
+          <button type="button" role="radio" aria-checked={!local} onClick={() => setModel("demo")}>
+            Demo model · {RUNS["gemini-dev"].model}
+          </button>
+        </div>
+      )}
       <div className="segmented set-switch" role="radiogroup" aria-label="Question set">
         <button type="button" role="radio" aria-checked={set === "dev"} onClick={() => setSet("dev")}>
           Main set · {RUNS["v3-dev"].items} questions
@@ -268,8 +283,11 @@ export default function BenchmarkPage() {
         </button>
       </div>
       <p className="set-note muted">
+        {!local
+          ? "Measured with the same runner and scoring as the local runs; nothing was tuned for this model. "
+          : ""}
         {set === "dev"
-          ? "Prompts and glossary were tuned twice against this set, so it flatters both systems."
+          ? "Prompts and glossary were tuned twice against this set, on the local model, so it flatters both systems."
           : "Written after the code was frozen and never used for tuning: the fairer test, and a small one."}{" "}
         Code version <span className="mono">{run.commit}</span>.
       </p>
@@ -285,12 +303,16 @@ export default function BenchmarkPage() {
           <dd>
             {d.agent_only} <span className="vs">vs</span> {d.baseline_only}
           </dd>
-          <dd className="stat-sub">Agent vs baseline. McNemar p = {d.p.toFixed(2)}: not significant</dd>
+          <dd className="stat-sub">
+            Agent vs baseline. McNemar p = {d.p.toFixed(2)}: {d.p < 0.05 ? "significant at the 5% level" : "not significant"}
+          </dd>
         </div>
         <div>
           <dt>Answers fully verified</dt>
           <dd>{pct(a.grounded_answer_rate)}</dd>
-          <dd className="stat-sub">Up from {pct(before.agent.grounded_answer_rate)} in v1, by checking figures in code</dd>
+          <dd className="stat-sub">
+            {before ? `Up from ${pct(before.agent.grounded_answer_rate)} in v1, by checking figures in code` : "Checked in code, as on the demo"}
+          </dd>
         </div>
         <div>
           <dt>Median time per question</dt>
@@ -301,7 +323,11 @@ export default function BenchmarkPage() {
 
       <section className="section">
         <h2 className="section-title">Task success by category</h2>
-        <p className="section-lead muted">The two systems fail differently: the baseline is better at questions one query can answer, the agent at ambiguity, recovery and text in the data.</p>
+        <p className="section-lead muted">
+          {local
+            ? "The two systems fail differently: the baseline is better at questions one query can answer, the agent at ambiguity, recovery and text in the data."
+            : "With this model the baseline is level or ahead in every category. The agent's losses are mostly ranked lists where one row was asked for, and ambiguous questions it answered with a stated assumption instead of asking."}
+        </p>
         <GroupedBars
           caption={`Task success by category on the ${set === "dev" ? "main" : "held-out"} set`}
           series={[
@@ -317,6 +343,7 @@ export default function BenchmarkPage() {
         <MetricTable a={a} b={b} />
       </section>
 
+      {local && (
       <section className="section">
         <h2 className="section-title">v1 to v3</h2>
         <div className="table-wrap">
@@ -354,6 +381,7 @@ export default function BenchmarkPage() {
           </table>
         </div>
       </section>
+      )}
 
       <section className="section">
         <h2 className="section-title">Every question</h2>
@@ -362,7 +390,10 @@ export default function BenchmarkPage() {
 
       <section className="section">
         <h2 className="section-title">Error analysis</h2>
-        <Markdown source={(set === "dev" ? analysis.dev : analysis.heldout).replace(/^## .*\n/, "")} headingOffset={0} />
+        <Markdown
+          source={(local ? (set === "dev" ? notes.dev : notes.heldout) : (notes.gemini ?? "")).replace(/^## .*\n/, "")}
+          headingOffset={0}
+        />
       </section>
 
       <section className="section">

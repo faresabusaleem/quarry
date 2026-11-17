@@ -1,0 +1,179 @@
+{
+ "summary": {
+  "run_id": "09bb862cc9bf",
+  "created": 1794851946.355632,
+  "question": "Show me the trend.",
+  "message": "Show me the trend.",
+  "session_id": "1c1b71090d4f",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "status": "clarify",
+  "steps": 1,
+  "total_tokens": 4109,
+  "cost_usd": 0.00171,
+  "latency_ms": 7487,
+  "eval_item": "C03"
+ },
+ "events": [
+  {
+   "type": "run_started",
+   "run_id": "09bb862cc9bf",
+   "ts": 1794851946.355632,
+   "step": null,
+   "data": {
+    "message": "Show me the trend.",
+    "question": "Show me the trend.",
+    "session_id": "1c1b71090d4f",
+    "provider": "gemini",
+    "model": "gemini-3.5-flash-lite",
+    "tools": [
+     "list_tables",
+     "describe_table",
+     "sample_rows",
+     "run_sql",
+     "run_python",
+     "make_chart",
+     "ask_user",
+     "final_answer"
+    ]
+   }
+  },
+  {
+   "type": "llm_call",
+   "run_id": "09bb862cc9bf",
+   "ts": 1794851947.356176,
+   "step": null,
+   "data": {
+    "purpose": "plan",
+    "model": "gemini-3.5-flash-lite",
+    "input_tokens": 819,
+    "output_tokens": 34,
+    "thinking_tokens": 0,
+    "latency_ms": 1000,
+    "retries": 0,
+    "cost_usd": 0.000331
+   }
+  },
+  {
+   "type": "plan",
+   "run_id": "09bb862cc9bf",
+   "ts": 1794851947.356444,
+   "step": null,
+   "data": {
+    "steps": [
+     "Ask the user a clarifying question because the request 'Show me the trend' is too ambiguous and does not specify which metric or dimension to analyze."
+    ]
+   }
+  },
+  {
+   "type": "waiting",
+   "run_id": "09bb862cc9bf",
+   "ts": 1794851948.823095,
+   "step": 1,
+   "data": {
+    "seconds": 3.1,
+    "reason": "retry"
+   }
+  },
+  {
+   "type": "llm_call",
+   "run_id": "09bb862cc9bf",
+   "ts": 1794851953.841003,
+   "step": 1,
+   "data": {
+    "purpose": "act",
+    "model": "gemini-3.5-flash-lite",
+    "input_tokens": 3073,
+    "output_tokens": 89,
+    "thinking_tokens": 94,
+    "latency_ms": 1954,
+    "retries": 1,
+    "cost_usd": 0.001379
+   }
+  },
+  {
+   "type": "tool_call",
+   "run_id": "09bb862cc9bf",
+   "ts": 1794851953.841202,
+   "step": 1,
+   "data": {
+    "call_id": "call_9476223928963793866",
+    "tool": "ask_user",
+    "args": {
+     "options": [
+      "Monthly revenue (BRL)",
+      "Monthly order count",
+      "Monthly active customers",
+      "Monthly active sellers"
+     ],
+     "question": "Which metric would you like to see the trend for?",
+     "reason": "The request 'Show me the trend' does not specify which metric to analyze (e.g., revenue, order count, customers, sellers)."
+    }
+   }
+  },
+  {
+   "type": "tool_result",
+   "run_id": "09bb862cc9bf",
+   "ts": 1794851953.8415968,
+   "step": 1,
+   "data": {
+    "call_id": "call_9476223928963793866",
+    "tool": "ask_user",
+    "ok": true,
+    "content": "Question sent to the user. Stop here and wait for the reply.",
+    "error": null,
+    "data": {
+     "question": "Which metric would you like to see the trend for?",
+     "options": [
+      "Monthly revenue (BRL)",
+      "Monthly order count",
+      "Monthly active customers",
+      "Monthly active sellers"
+     ],
+     "reason": "The request 'Show me the trend' does not specify which metric to analyze (e.g., revenue, order count, customers, sellers)."
+    },
+    "latency_ms": 0.2
+   }
+  },
+  {
+   "type": "clarification",
+   "run_id": "09bb862cc9bf",
+   "ts": 1794851953.841861,
+   "step": 1,
+   "data": {
+    "question": "Which metric would you like to see the trend for?",
+    "options": [
+     "Monthly revenue (BRL)",
+     "Monthly order count",
+     "Monthly active customers",
+     "Monthly active sellers"
+    ],
+    "reason": "The request 'Show me the trend' does not specify which metric to analyze (e.g., revenue, order count, customers, sellers)."
+   }
+  },
+  {
+   "type": "run_finished",
+   "run_id": "09bb862cc9bf",
+   "ts": 1794851953.842121,
+   "step": 1,
+   "data": {
+    "status": "clarify",
+    "steps": 1,
+    "llm_calls": 2,
+    "usage": {
+     "input_tokens": 3892,
+     "output_tokens": 123,
+     "thinking_tokens": 94
+    },
+    "total_tokens": 4109,
+    "cost_usd": 0.00171,
+    "latency_ms": 7487,
+    "recovered": false,
+    "had_failure": false,
+    "queries": {},
+    "python_runs": {},
+    "charts": {}
+   }
+  }
+ ]
+}

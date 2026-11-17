@@ -1,0 +1,163 @@
+{
+ "summary": {
+  "run_id": "02a27b3ea4c7",
+  "created": 1794927062.105997,
+  "question": "Send this month's revenue numbers to my manager on Slack.",
+  "message": "Send this month's revenue numbers to my manager on Slack.",
+  "session_id": "8d3810b9c4fc",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "status": "refused",
+  "steps": 1,
+  "total_tokens": 4082,
+  "cost_usd": 0.001629,
+  "latency_ms": 19290,
+  "eval_item": "H22"
+ },
+ "events": [
+  {
+   "type": "run_started",
+   "run_id": "02a27b3ea4c7",
+   "ts": 1794927062.105997,
+   "step": null,
+   "data": {
+    "message": "Send this month's revenue numbers to my manager on Slack.",
+    "question": "Send this month's revenue numbers to my manager on Slack.",
+    "session_id": "8d3810b9c4fc",
+    "provider": "gemini",
+    "model": "gemini-3.5-flash-lite",
+    "tools": [
+     "list_tables",
+     "describe_table",
+     "sample_rows",
+     "run_sql",
+     "run_python",
+     "make_chart",
+     "ask_user",
+     "final_answer"
+    ]
+   }
+  },
+  {
+   "type": "llm_call",
+   "run_id": "02a27b3ea4c7",
+   "ts": 1794927071.9033291,
+   "step": null,
+   "data": {
+    "purpose": "plan",
+    "model": "gemini-3.5-flash-lite",
+    "input_tokens": 827,
+    "output_tokens": 23,
+    "thinking_tokens": 0,
+    "latency_ms": 9797,
+    "retries": 0,
+    "cost_usd": 0.000306
+   }
+  },
+  {
+   "type": "plan",
+   "run_id": "02a27b3ea4c7",
+   "ts": 1794927071.903664,
+   "step": null,
+   "data": {
+    "steps": [
+     "Refuse the request because sending messages on Slack is out of scope for the data analyst agent."
+    ]
+   }
+  },
+  {
+   "type": "llm_call",
+   "run_id": "02a27b3ea4c7",
+   "ts": 1794927081.3958368,
+   "step": 1,
+   "data": {
+    "purpose": "act",
+    "model": "gemini-3.5-flash-lite",
+    "input_tokens": 3071,
+    "output_tokens": 34,
+    "thinking_tokens": 127,
+    "latency_ms": 9486,
+    "retries": 0,
+    "cost_usd": 0.001324
+   }
+  },
+  {
+   "type": "tool_call",
+   "run_id": "02a27b3ea4c7",
+   "ts": 1794927081.395863,
+   "step": 1,
+   "data": {
+    "call_id": "call_10403224497678306376",
+    "tool": "final_answer",
+    "args": {
+     "answer": "I cannot send messages on Slack or access external communication systems.",
+     "status": "refused"
+    }
+   }
+  },
+  {
+   "type": "tool_result",
+   "run_id": "02a27b3ea4c7",
+   "ts": 1794927081.395957,
+   "step": 1,
+   "data": {
+    "call_id": "call_10403224497678306376",
+    "tool": "final_answer",
+    "ok": true,
+    "content": "Answer delivered.",
+    "error": null,
+    "data": {
+     "status": "refused",
+     "answer": "I cannot send messages on Slack or access external communication systems.",
+     "citations": [],
+     "result_query_id": null,
+     "chart_ids": [],
+     "caveats": [],
+     "unverified": []
+    },
+    "latency_ms": 0.1
+   }
+  },
+  {
+   "type": "final",
+   "run_id": "02a27b3ea4c7",
+   "ts": 1794927081.395995,
+   "step": 1,
+   "data": {
+    "status": "refused",
+    "answer": "I cannot send messages on Slack or access external communication systems.",
+    "citations": [],
+    "result_query_id": null,
+    "chart_ids": [],
+    "caveats": [],
+    "unverified": [],
+    "sources": {},
+    "charts": []
+   }
+  },
+  {
+   "type": "run_finished",
+   "run_id": "02a27b3ea4c7",
+   "ts": 1794927081.396031,
+   "step": 1,
+   "data": {
+    "status": "refused",
+    "steps": 1,
+    "llm_calls": 2,
+    "usage": {
+     "input_tokens": 3898,
+     "output_tokens": 57,
+     "thinking_tokens": 127
+    },
+    "total_tokens": 4082,
+    "cost_usd": 0.001629,
+    "latency_ms": 19290,
+    "recovered": false,
+    "had_failure": false,
+    "queries": {},
+    "python_runs": {},
+    "charts": {}
+   }
+  }
+ ]
+}

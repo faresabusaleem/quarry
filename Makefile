@@ -35,8 +35,8 @@ report:
 site-data:  ## export the numbers, analysis and sample rows the website shows into web/lib/generated
 	uv run python scripts/export_site_data.py
 
-readme:  ## regenerate the README results tables from evals/results (RUN=..., BEFORE=..., HELDOUT=...)
-	uv run python -m quarry.evals.readme --run $(RUN) $(if $(BEFORE),--before $(BEFORE),) $(if $(HELDOUT),--heldout $(HELDOUT),)
+readme:  ## regenerate the README results tables from evals/results (RUN=..., BEFORE=..., HELDOUT=..., GEMINI=...)
+	uv run python -m quarry.evals.readme --run $(RUN) $(if $(BEFORE),--before $(BEFORE),) $(if $(HELDOUT),--heldout $(HELDOUT),) $(if $(GEMINI),--gemini $(GEMINI),)
 
 serve:  ## API on :8000 (serves the built UI too, if web/out exists)
 	uv run uvicorn quarry.api.app:app --host 0.0.0.0 --port 8000

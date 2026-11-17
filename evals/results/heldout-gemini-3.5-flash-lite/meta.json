@@ -1,0 +1,20 @@
+{
+ "run": "heldout-gemini-3.5-flash-lite",
+ "commit": "43b0f43",
+ "provider": "gemini",
+ "model": "gemini-3.5-flash-lite",
+ "items": 25,
+ "set": "heldout",
+ "started": "2026-11-16 22:09:53",
+ "finished": "2026-11-17 18:54:14",
+ "max_steps": 14,
+ "quota_policy": "provider-error records removed and re-run; nothing else re-run",
+ "commits": [
+  "43b0f43"
+ ],
+ "sittings": [
+  "2026-11-16 22:09-22:39 (items 1-15)",
+  "2026-11-17 18:39-18:54 (items 16-25)"
+ ],
+ "note": "Run in sittings because of the free daily quota; evals/results/gemini-3.5-flash-lite/quota.log has every line. Agent, runner and scorer code are identical across them (no change under src/ from a5752a4 to 43b0f43)."
+}

@@ -1,0 +1,163 @@
+{
+ "summary": {
+  "run_id": "1125c0cdb046",
+  "created": 1794927089.868225,
+  "question": "What's a good recipe for feijoada?",
+  "message": "What's a good recipe for feijoada?",
+  "session_id": "957955586f5a",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "status": "refused",
+  "steps": 1,
+  "total_tokens": 4059,
+  "cost_usd": 0.001616,
+  "latency_ms": 20577,
+  "eval_item": "H23"
+ },
+ "events": [
+  {
+   "type": "run_started",
+   "run_id": "1125c0cdb046",
+   "ts": 1794927089.868225,
+   "step": null,
+   "data": {
+    "message": "What's a good recipe for feijoada?",
+    "question": "What's a good recipe for feijoada?",
+    "session_id": "957955586f5a",
+    "provider": "gemini",
+    "model": "gemini-3.5-flash-lite",
+    "tools": [
+     "list_tables",
+     "describe_table",
+     "sample_rows",
+     "run_sql",
+     "run_python",
+     "make_chart",
+     "ask_user",
+     "final_answer"
+    ]
+   }
+  },
+  {
+   "type": "llm_call",
+   "run_id": "1125c0cdb046",
+   "ts": 1794927099.4887948,
+   "step": null,
+   "data": {
+    "purpose": "plan",
+    "model": "gemini-3.5-flash-lite",
+    "input_tokens": 825,
+    "output_tokens": 18,
+    "thinking_tokens": 0,
+    "latency_ms": 9620,
+    "retries": 0,
+    "cost_usd": 0.000293
+   }
+  },
+  {
+   "type": "plan",
+   "run_id": "1125c0cdb046",
+   "ts": 1794927099.4891179,
+   "step": null,
+   "data": {
+    "steps": [
+     "Refuse"
+    ]
+   }
+  },
+  {
+   "type": "llm_call",
+   "run_id": "1125c0cdb046",
+   "ts": 1794927110.444126,
+   "step": 1,
+   "data": {
+    "purpose": "act",
+    "model": "gemini-3.5-flash-lite",
+    "input_tokens": 3053,
+    "output_tokens": 46,
+    "thinking_tokens": 117,
+    "latency_ms": 10949,
+    "retries": 0,
+    "cost_usd": 0.001323
+   }
+  },
+  {
+   "type": "tool_call",
+   "run_id": "1125c0cdb046",
+   "ts": 1794927110.444244,
+   "step": 1,
+   "data": {
+    "call_id": "call_12087837165997777147",
+    "tool": "final_answer",
+    "args": {
+     "answer": "I cannot provide a recipe for feijoada as my scope is limited to analyzing Olist e-commerce business data.",
+     "status": "refused"
+    }
+   }
+  },
+  {
+   "type": "tool_result",
+   "run_id": "1125c0cdb046",
+   "ts": 1794927110.444618,
+   "step": 1,
+   "data": {
+    "call_id": "call_12087837165997777147",
+    "tool": "final_answer",
+    "ok": true,
+    "content": "Answer delivered.",
+    "error": null,
+    "data": {
+     "status": "refused",
+     "answer": "I cannot provide a recipe for feijoada as my scope is limited to analyzing Olist e-commerce business data.",
+     "citations": [],
+     "result_query_id": null,
+     "chart_ids": [],
+     "caveats": [],
+     "unverified": []
+    },
+    "latency_ms": 0.3
+   }
+  },
+  {
+   "type": "final",
+   "run_id": "1125c0cdb046",
+   "ts": 1794927110.444993,
+   "step": 1,
+   "data": {
+    "status": "refused",
+    "answer": "I cannot provide a recipe for feijoada as my scope is limited to analyzing Olist e-commerce business data.",
+    "citations": [],
+    "result_query_id": null,
+    "chart_ids": [],
+    "caveats": [],
+    "unverified": [],
+    "sources": {},
+    "charts": []
+   }
+  },
+  {
+   "type": "run_finished",
+   "run_id": "1125c0cdb046",
+   "ts": 1794927110.445326,
+   "step": 1,
+   "data": {
+    "status": "refused",
+    "steps": 1,
+    "llm_calls": 2,
+    "usage": {
+     "input_tokens": 3878,
+     "output_tokens": 64,
+     "thinking_tokens": 117
+    },
+    "total_tokens": 4059,
+    "cost_usd": 0.001616,
+    "latency_ms": 20577,
+    "recovered": false,
+    "had_failure": false,
+    "queries": {},
+    "python_runs": {},
+    "charts": {}
+   }
+  }
+ ]
+}

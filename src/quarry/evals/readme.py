@@ -2,7 +2,8 @@
 
     uv run python -m quarry.evals.readme --run v3-ollama-qwen3.5-9b \\
         --before v1-ollama-qwen3.5-9b v2-ollama-qwen3.5-9b \\
-        --heldout v1-heldout-ollama-qwen3.5-9b v3-heldout-ollama-qwen3.5-9b
+        --heldout v1-heldout-ollama-qwen3.5-9b v3-heldout-ollama-qwen3.5-9b \\
+        --gemini gemini-3.5-flash-lite heldout-gemini-3.5-flash-lite
 
 The README's numbers are generated from the scored JSONL files, never typed by hand.
 """
@@ -75,6 +76,9 @@ def main() -> None:
     parser.add_argument("--run", required=True, help="the headline dev-set run")
     parser.add_argument("--before", nargs="*", default=[], help="earlier dev-set runs")
     parser.add_argument("--heldout", nargs="*", default=[], help="held-out runs, oldest first")
+    parser.add_argument(
+        "--gemini", nargs="*", default=[], help="runs on the hosted demo's model (dev, held-out)"
+    )
     args = parser.parse_args()
     run_dir = RESULTS / args.run
     s = summarize_run(run_dir)
@@ -90,6 +94,8 @@ def main() -> None:
     text = _block("progression", runs_table([*args.before, args.run]), text)
     if args.heldout:
         text = _block("heldout", runs_table(args.heldout), text)
+    if args.gemini:
+        text = _block("gemini", runs_table(args.gemini), text)
     README.write_text(text)
     print(f"updated README.md from {args.run}")
 

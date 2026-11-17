@@ -283,7 +283,7 @@ export default function Home() {
               <h2 id="results-title">Measured, not claimed</h2>
               <p>
                 Against single-shot text-to-SQL with the same local model, schema and glossary, on questions with hand-written gold SQL. Every question,
-                metric and failure is in <Link href="/app/benchmark/">the benchmark</Link>, with the error analysis.
+                metric and failure is in <Link href="/app/benchmark/">the benchmark</Link>, with the error analysis and the same test on the demo&apos;s model.
               </p>
             </div>
             <div className="mark" data-reveal>
@@ -398,7 +398,8 @@ export default function Home() {
             <p className="foot-h">About the demo</p>
             <p>
               Gemini 3.5 Flash Lite on the free tier: about 60 questions a day across all visitors and 6 an hour each, 200 seconds a run, model-written Python
-              off. Runs are kept only in memory, so shared links expire. The published scores come from a local model, not from this demo.
+              off. Runs are kept only in memory, so shared links expire. The headline scores come from a local model; this demo&apos;s model has its own
+              results on <Link href="/app/benchmark/">the benchmark page</Link>.
             </p>
           </div>
           <div className="foot-wide">

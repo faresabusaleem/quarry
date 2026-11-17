@@ -36,6 +36,11 @@ significant. The two get different questions right. The agent asks when a questi
 planted in the data, and 91% of its answers have every figure verified against a query result.
 It is also about 11 times slower. The [error analysis](#error-analysis) explains both sides.
 
+**Measured on the demo's model too (Gemini 3.5 Flash Lite, free tier):** both systems do better
+and the baseline leads on both sets, 90% to 84% on the 89 and 88% to 80% on held-out; again
+neither gap is significant. In 9 of the agent's 11 wrong results there, the answer text is right
+but the linked result is a ranked list where one row was asked for.
+
 ---
 
 ## Contents
@@ -166,6 +171,19 @@ never used to make a change. The v1 code was then run on it unchanged.
 | `v3-heldout-ollama-qwen3.5-9b` | `e07bf01` | 25 | 60% | 61% | 68% | 72% | 94% | 44.1 s |
 <!-- heldout:end -->
 
+**The hosted demo's model.** The same benchmark, runner and scoring, run on Gemini 3.5 Flash
+Lite, the model the live demo uses. It ran on the free tier in sittings over four days because
+of the daily quota; an item that ended in a provider error was re-run, nothing else was
+([`eval_quota.py`](scripts/eval_quota.py)). The code is `43b0f43`: v3 plus the post-v3 fixes
+listed under [Limitations](#limitations).
+
+<!-- gemini:start -->
+| Run | Code | Agent items | Agent task success | Agent exec. accuracy | Baseline task success | Baseline exec. accuracy | Agent answers fully verified | Agent median latency |
+|---|---|---|---|---|---|---|---|---|
+| `gemini-3.5-flash-lite` | `43b0f43` | 89 | 84% | 89% | 90% | 91% | 95% | 8.6 s |
+| `heldout-gemini-3.5-flash-lite` | `43b0f43` | 25 | 80% | 83% | 88% | 94% | 95% | 20.6 s |
+<!-- gemini:end -->
+
 Every figure above is computed from the per-item results in [`evals/results/`](evals/results)
 and can be reproduced with `make eval` (a full run on a local 9B model takes a few hours;
 it resumes where it stopped). The full report, including every failed item, is in
@@ -188,10 +206,18 @@ it resumes where it stopped). The full report, including every failed item, is i
   raised fully verified answers from 47% to 91% (dev) and from 27% to 94% (held-out), and cut
   median latency by 32% (dev) and 15% (held-out), because the model stopped spending calls
   rewriting answers.
+- **A stronger model helped the baseline more.** On Gemini 3.5 Flash Lite the agent solved 75
+  of 89 and 20 of 25, the baseline 80 and 22 (paired: 1 against 6, p = 0.12; 0 against 2,
+  p = 0.50). Most questions here need one correct query, and a model that writes it reliably
+  gains little from a loop. The agent's misses were mostly shape, not analysis: 8 ranked lists
+  where one row was asked for, and 7 ambiguous questions answered with a stated assumption
+  instead of a question ([Gemini analysis](evals/results/gemini-3.5-flash-lite/analysis.md)).
 - **Safety held everywhere:** no injected instruction followed, no canary leaked, every unsafe
-  or out-of-scope request refused, and no write or file read attempted, in any run on either set.
-- **Cost:** $0. Every measured run used a local model, so the paid-tier column is empty. Gemini
-  now runs the hosted demo but has not been benchmarked (see [Limitations](#limitations)).
+  or out-of-scope request refused, and no write or file read attempted, in any run on either
+  set with either model.
+- **Cost:** $0. The qwen runs used a local model and the Gemini runs the free tier. At Gemini's
+  list price the agent would have cost $0.79 for the 89 questions and the baseline $0.08: the
+  agent sends about ten times the tokens.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/img/benchmark-dark.png">
@@ -330,7 +356,8 @@ Written by hand from the traces, which are committed with each run. Full version
 [v1](evals/results/v1-ollama-qwen3.5-9b/analysis.md),
 [v2](evals/results/v2-ollama-qwen3.5-9b/analysis.md),
 [v3](evals/results/v3-ollama-qwen3.5-9b/analysis.md),
-[held-out](evals/results/v3-heldout-ollama-qwen3.5-9b/analysis.md).
+[held-out](evals/results/v3-heldout-ollama-qwen3.5-9b/analysis.md),
+[Gemini, both sets](evals/results/gemini-3.5-flash-lite/analysis.md).
 
 **Why the v3 agent failed (24 of 89 dev items):**
 
@@ -371,9 +398,11 @@ Written by hand from the traces, which are committed with each run. Full version
 
 ## Limitations
 
-- **One model measured.** Every number comes from qwen3.5:9b through Ollama on a laptop. The
-  Gemini provider was first called live on 2026-11-13, for the hosted demo, and has not been
-  benchmarked. Those first live calls found a bug the recorded-response tests had missed: the
+- **Two models.** qwen3.5:9b through Ollama on a laptop, and Gemini 3.5 Flash Lite on the free
+  tier, which also runs the hosted demo. Gemini's latency includes client-side pacing to 14
+  requests a minute and retries after 503 responses. The Gemini provider was first called live
+  on 2026-11-13, for the hosted demo. Those first live calls found a bug the recorded-response
+  tests had missed: the
   tool-schema cleaner dropped `make_chart`'s `title` argument while still listing it as
   required. Gemini rejected the tool; Ollama accepted it, and no measured run failed because of
   it. Google does not publish fixed free-tier limits. AI Studio showed 15 requests a minute and
@@ -391,15 +420,17 @@ Written by hand from the traces, which are committed with each run. Full version
 - **Scoring is strict on shape.** An answer that names the right winner in prose but marks a
   ten-row ranking as its result fails. That is deliberate, since the linked result is what a
   reader checks, but it costs the agent several items whose text is right.
-- **Measured code vs shipped code.** The numbers describe commit `e07bf01`. Changes after it
-  are not measured: the parser message, a scorer fix that changed no outcome, UI fixes, the
-  tool-schema fix above, a fix that kept a closing bracket after a cited figure, and an
-  optional time budget per run.
+- **Measured code vs shipped code.** The qwen numbers describe commit `e07bf01`. Changes after
+  it are not measured on qwen: the parser message, a scorer fix that changed no outcome, UI
+  fixes, the tool-schema fix above, a fix that kept a closing bracket after a cited figure, and
+  an optional time budget per run. The Gemini runs used `43b0f43`, which includes all of them
+  (the time budget off).
 - **The Python sandbox needs OS support.** It uses `sandbox-exec` on macOS (a deprecated but
   working Apple interface) or an unprivileged network namespace on Linux. Docker and Vercel
   provide neither, so `run_python` is off there. It is process isolation, not a VM.
-- **Slow.** Median 42 seconds per question on a local 9B model, against 4 seconds for the
-  baseline. A hosted model would be faster; that has not been measured.
+- **Slow on a laptop.** Median 42 seconds per question on a local 9B model, against 4 seconds
+  for the baseline. On Gemini's free tier the medians were 8.6 and 1.6 seconds on the dev set,
+  pacing included.
 - **Data licence.** The Olist dataset is CC BY-NC-SA 4.0: free to use with attribution, but not
   commercially.
 

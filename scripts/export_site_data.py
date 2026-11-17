@@ -33,6 +33,9 @@ RUNS = {
     "v3-dev": "v3-ollama-qwen3.5-9b",
     "v1-heldout": "v1-heldout-ollama-qwen3.5-9b",
     "v3-heldout": "v3-heldout-ollama-qwen3.5-9b",
+    # The hosted demo's model, measured with the same runner and scoring.
+    "gemini-dev": "gemini-3.5-flash-lite",
+    "gemini-heldout": "heldout-gemini-3.5-flash-lite",
 }
 # Suggested questions: real benchmark items the v3 agent answered correctly.
 EXAMPLE_IDS = ["T05", "J01", "M11", "M02"]
@@ -89,6 +92,7 @@ def analysis() -> dict[str, Any]:
     return {
         "dev": (RESULTS / RUNS["v3-dev"] / "analysis.md").read_text().strip(),
         "heldout": (RESULTS / RUNS["v3-heldout"] / "analysis.md").read_text().strip(),
+        "gemini": (RESULTS / RUNS["gemini-dev"] / "analysis.md").read_text().strip(),
         "limitations": _section(readme, "Limitations"),
     }
 

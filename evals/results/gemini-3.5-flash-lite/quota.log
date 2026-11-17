@@ -1,0 +1,237 @@
+2026-11-14 00:30:04 [dev 1/89] L01 baseline: pass, 1 calls, budget 1/330
+2026-11-14 00:30:08 [dev 1/89] L01 agent: pass, 3 calls, budget 4/330
+2026-11-14 00:30:09 [dev 2/89] L02 baseline: pass, 1 calls, budget 5/330
+2026-11-14 00:30:13 [dev 2/89] L02 agent: pass, 3 calls, budget 8/330
+2026-11-14 00:30:15 [dev 3/89] L03 baseline: pass, 1 calls, budget 9/330
+2026-11-14 00:30:21 [dev 3/89] L03 agent: pass, 5 calls, budget 14/330
+2026-11-14 00:30:22 [dev 4/89] L04 baseline: pass, 1 calls, budget 15/330
+2026-11-14 00:30:26 [dev 4/89] L04 agent: pass, 3 calls, budget 18/330
+2026-11-14 00:30:28 [dev 5/89] L05 baseline: pass, 1 calls, budget 19/330
+2026-11-14 00:30:40 [dev 5/89] L05 agent: fail (wrong_result), 4 calls, budget 23/330
+2026-11-14 00:30:41 [dev 6/89] L06 baseline: pass, 1 calls, budget 24/330
+2026-11-14 00:31:35 [dev 6/89] L06 agent: pass, 4 calls, budget 28/330
+2026-11-14 00:31:36 [dev 7/89] L07 baseline: pass, 1 calls, budget 29/330
+2026-11-14 00:31:45 [dev 7/89] L07 agent: pass, 7 calls, budget 36/330
+2026-11-14 00:31:47 [dev 8/89] L08 baseline: pass, 1 calls, budget 37/330
+2026-11-14 00:31:51 [dev 8/89] L08 agent: pass, 3 calls, budget 40/330
+2026-11-14 00:32:31 [dev 9/89] L09 baseline: fail (wrong_result), 1 calls, budget 41/330
+2026-11-14 00:32:35 [dev 9/89] L09 agent: fail (wrong_result), 3 calls, budget 44/330
+2026-11-14 00:32:37 [dev 10/89] L10 baseline: pass, 1 calls, budget 45/330
+2026-11-14 00:32:42 [dev 10/89] L10 agent: pass, 4 calls, budget 49/330
+2026-11-14 00:32:44 [dev 11/89] L11 baseline: pass, 1 calls, budget 50/330
+2026-11-14 00:32:48 [dev 11/89] L11 agent: pass, 3 calls, budget 53/330
+2026-11-14 00:32:50 [dev 12/89] L12 baseline: pass, 1 calls, budget 54/330
+2026-11-14 00:33:31 [dev 12/89] L12 agent: pass, 4 calls, budget 58/330
+2026-11-14 00:33:32 [dev 13/89] A01 baseline: pass, 1 calls, budget 59/330
+2026-11-14 00:33:38 [dev 13/89] A01 agent: pass, 4 calls, budget 63/330
+2026-11-14 00:33:39 [dev 14/89] A02 baseline: pass, 1 calls, budget 64/330
+2026-11-14 00:35:05 [dev 14/89] A02 agent: pass, 12 calls, budget 76/330
+2026-11-14 00:35:07 [dev 15/89] A03 baseline: pass, 1 calls, budget 77/330
+2026-11-14 00:35:13 [dev 15/89] A03 agent: pass, 5 calls, budget 82/330
+2026-11-14 00:35:15 [dev 16/89] A04 baseline: pass, 1 calls, budget 83/330
+2026-11-14 00:35:20 [dev 16/89] A04 agent: pass, 4 calls, budget 87/330
+2026-11-14 00:35:22 [dev 17/89] A05 baseline: pass, 1 calls, budget 88/330
+2026-11-14 00:35:29 [dev 17/89] A05 agent: pass, 5 calls, budget 93/330
+2026-11-14 00:35:30 [dev 18/89] A06 baseline: pass, 1 calls, budget 94/330
+2026-11-14 00:35:35 [dev 18/89] A06 agent: pass, 4 calls, budget 98/330
+2026-11-14 00:37:00 [dev 19/89] A07 baseline: pass, 1 calls, budget 99/330
+2026-11-14 00:37:07 [dev 19/89] A07 agent: pass, 5 calls, budget 104/330
+2026-11-14 00:37:09 [dev 20/89] A08 baseline: pass, 1 calls, budget 105/330
+2026-11-14 00:37:14 [dev 20/89] A08 agent: pass, 4 calls, budget 109/330
+2026-11-14 00:37:16 [dev 21/89] A09 baseline: pass, 1 calls, budget 110/330
+2026-11-14 00:37:21 [dev 21/89] A09 agent: pass, 4 calls, budget 114/330
+2026-11-14 00:37:23 [dev 22/89] A10 baseline: pass, 1 calls, budget 115/330
+2026-11-14 00:37:35 [dev 22/89] A10 agent: pass, 8 calls, budget 123/330
+2026-11-14 00:37:37 [dev 23/89] A11 baseline: pass, 1 calls, budget 124/330
+2026-11-14 00:39:03 [dev 23/89] A11 agent: pass, 4 calls, budget 128/330
+2026-11-14 00:39:05 [dev 24/89] A12 baseline: pass, 1 calls, budget 129/330
+2026-11-14 00:39:13 [dev 24/89] A12 agent: pass, 6 calls, budget 135/330
+2026-11-14 00:39:15 [dev 25/89] A13 baseline: pass, 1 calls, budget 136/330
+2026-11-14 00:39:26 [dev 25/89] A13 agent: pass, 8 calls, budget 144/330
+2026-11-14 00:39:28 [dev 26/89] A14 baseline: fail (wrong_result), 1 calls, budget 145/330
+2026-11-14 00:39:34 [dev 26/89] A14 agent: fail (wrong_result), 4 calls, budget 149/330
+2026-11-14 00:39:36 [dev 27/89] J01 baseline: pass, 1 calls, budget 150/330
+2026-11-14 00:41:21 [dev 27/89] J01 agent: pass, 14 calls, budget 164/330
+2026-11-14 00:41:23 [dev 28/89] J02 baseline: pass, 1 calls, budget 165/330
+2026-11-14 00:41:32 [dev 28/89] J02 agent: pass, 6 calls, budget 171/330
+2026-11-14 00:41:33 [dev 29/89] J03 baseline: pass, 1 calls, budget 172/330
+2026-11-14 00:42:34 [dev 29/89] J03 agent: pass, 6 calls, budget 178/330
+2026-11-14 00:42:36 [dev 30/89] J04 baseline: fail (wrong_result), 1 calls, budget 179/330
+2026-11-14 00:43:02 [dev 30/89] J04 agent: fail (wrong_result), 13 calls, budget 192/330
+2026-11-14 00:44:01 [dev 31/89] J05 baseline: pass, 1 calls, budget 193/330
+2026-11-14 00:44:08 [dev 31/89] J05 agent: pass, 5 calls, budget 198/330
+2026-11-14 00:44:10 [dev 32/89] J06 baseline: pass, 1 calls, budget 199/330
+2026-11-14 00:44:14 [dev 32/89] J06 agent: pass, 3 calls, budget 202/330
+2026-11-14 00:44:16 [dev 33/89] J07 baseline: pass, 1 calls, budget 203/330
+2026-11-14 00:44:24 [dev 33/89] J07 agent: pass, 5 calls, budget 208/330
+2026-11-14 00:44:26 [dev 34/89] J08 baseline: pass, 1 calls, budget 209/330
+2026-11-14 00:44:30 [dev 34/89] J08 agent: pass, 3 calls, budget 212/330
+2026-11-14 00:44:32 [dev 35/89] J09 baseline: pass, 1 calls, budget 213/330
+2026-11-14 00:44:38 [dev 35/89] J09 agent: fail (wrong_result), 3 calls, budget 216/330
+2026-11-14 00:44:39 [dev 36/89] J10 baseline: pass, 1 calls, budget 217/330
+2026-11-14 00:45:52 [dev 36/89] J10 agent: pass, 4 calls, budget 221/330
+2026-11-14 00:45:53 [dev 37/89] J11 baseline: fail (wrong_result), 1 calls, budget 222/330
+2026-11-14 00:45:59 [dev 37/89] J11 agent: fail (wrong_result), 4 calls, budget 226/330
+2026-11-14 00:46:01 [dev 38/89] J12 baseline: pass, 1 calls, budget 227/330
+2026-11-14 00:47:03 [dev 38/89] J12 agent: pass, 8 calls, budget 235/330
+2026-11-14 00:47:05 [dev 39/89] J13 baseline: pass, 1 calls, budget 236/330
+2026-11-14 00:47:10 [dev 39/89] J13 agent: pass, 3 calls, budget 239/330
+2026-11-14 00:47:11 [dev 40/89] J14 baseline: pass, 1 calls, budget 240/330
+2026-11-14 00:47:16 [dev 40/89] J14 agent: pass, 3 calls, budget 243/330
+2026-11-14 00:47:18 [dev 41/89] T01 baseline: pass, 1 calls, budget 244/330
+2026-11-14 00:47:33 [dev 41/89] T01 agent: pass, 7 calls, budget 251/330
+2026-11-14 00:47:35 [dev 42/89] T02 baseline: pass, 1 calls, budget 252/330
+2026-11-14 01:04:00 [dev 42/89] T02 agent: pass, 6 calls, budget 258/330
+2026-11-14 01:04:02 [dev 43/89] T03 baseline: pass, 1 calls, budget 259/330
+2026-11-14 01:20:00 [dev 43/89] T03 agent: pass, 12 calls, budget 271/330
+2026-11-14 01:20:02 [dev 44/89] T04 baseline: pass, 1 calls, budget 272/330
+2026-11-14 01:20:22 [dev 44/89] T04 agent: pass, 13 calls, budget 285/330
+2026-11-14 01:20:24 [dev 45/89] T05 baseline: pass, 1 calls, budget 286/330
+2026-11-14 01:21:19 [dev 45/89] T05 agent: pass, 4 calls, budget 290/330
+2026-11-14 01:21:21 [dev 46/89] T06 baseline: pass, 1 calls, budget 291/330
+2026-11-14 01:21:31 [dev 46/89] T06 agent: pass, 5 calls, budget 296/330
+2026-11-14 01:21:33 [dev 47/89] T07 baseline: fail (wrong_result), 1 calls, budget 297/330
+2026-11-14 01:21:38 [dev 47/89] T07 agent: fail (wrong_result), 4 calls, budget 301/330
+2026-11-14 01:23:04 [dev 48/89] T08 baseline: pass, 1 calls, budget 302/330
+2026-11-14 01:23:10 [dev 48/89] T08 agent: pass, 5 calls, budget 307/330
+2026-11-14 01:23:11 [dev 49/89] T09 baseline: pass, 1 calls, budget 308/330
+2026-11-14 01:23:17 [dev 49/89] T09 agent: pass, 4 calls, budget 312/330
+2026-11-14 01:23:19 [dev 50/89] T10 baseline: pass, 1 calls, budget 313/330
+2026-11-14 01:24:17 [dev 50/89] T10 agent: pass, 11 calls, budget 324/330
+2026-11-14 01:24:19 [dev 51/89] M01 baseline: pass, 1 calls, budget 325/330
+2026-11-14 01:25:04 [dev 51/89] M01 agent: pass, 8 calls, budget 333/330
+2026-11-14 01:25:04 daily budget of 330 calls used; waiting for the quota reset at 2026-11-14 12:05 +04
+2026-11-16 21:36:29 [dev 52/89] M02 baseline: pass, 1 calls, budget 1/440
+2026-11-16 21:37:44 [dev 52/89] M02 agent: pass, 14 calls, budget 15/440
+2026-11-16 21:37:50 [dev 53/89] M03 baseline: pass, 1 calls, budget 16/440
+2026-11-16 21:38:01 [dev 53/89] M03 agent: pass, 7 calls, budget 23/440
+2026-11-16 21:38:03 [dev 54/89] M04 baseline: fail (wrong_result), 1 calls, budget 24/440
+2026-11-16 21:42:49 [dev 54/89] M04 agent: pass, 15 calls, budget 39/440
+2026-11-16 21:43:00 [dev 55/89] M05 baseline: pass, 1 calls, budget 40/440
+2026-11-16 21:44:08 [dev 55/89] M05 agent: pass, 8 calls, budget 48/440
+2026-11-16 21:44:17 [dev 56/89] M06 baseline: pass, 1 calls, budget 49/440
+2026-11-16 21:45:05 [dev 56/89] M06 agent: pass, 4 calls, budget 53/440
+2026-11-16 21:45:15 [dev 57/89] M07 baseline: pass, 1 calls, budget 54/440
+2026-11-16 21:47:21 [dev 57/89] M07 agent: pass, 11 calls, budget 65/440
+2026-11-16 21:47:25 [dev 58/89] M08 baseline: pass, 1 calls, budget 66/440
+2026-11-16 21:48:41 [dev 58/89] M08 agent: pass, 4 calls, budget 70/440
+2026-11-16 21:48:44 [dev 59/89] M09 baseline: pass, 1 calls, budget 71/440
+2026-11-16 21:48:55 [dev 59/89] M09 agent: pass, 3 calls, budget 74/440
+2026-11-16 21:48:58 [dev 60/89] M10 baseline: pass, 1 calls, budget 75/440
+2026-11-16 21:50:17 [dev 60/89] M10 agent: fail (wrong_result), 12 calls, budget 87/440
+2026-11-16 21:50:27 [dev 61/89] M11 baseline: pass, 1 calls, budget 88/440
+2026-11-16 21:50:57 [dev 61/89] M11 agent: pass, 9 calls, budget 97/440
+2026-11-16 21:50:59 [dev 62/89] M12 baseline: pass, 1 calls, budget 98/440
+2026-11-16 21:52:04 [dev 62/89] M12 agent: pass, 5 calls, budget 103/440
+2026-11-16 21:52:08 [dev 63/89] F01 baseline: pass, 1 calls, budget 104/440
+2026-11-16 21:53:27 [dev 63/89] F01 agent: pass, 6 calls, budget 110/440
+2026-11-16 21:53:30 [dev 64/89] F02 baseline: pass, 1 calls, budget 111/440
+2026-11-16 21:53:53 [dev 64/89] F02 agent: pass, 4 calls, budget 115/440
+2026-11-16 21:53:56 [dev 65/89] F03 baseline: pass, 1 calls, budget 116/440
+2026-11-16 21:56:17 [dev 65/89] F03 agent: pass, 8 calls, budget 124/440
+2026-11-16 21:56:20 [dev 66/89] F04 baseline: pass, 1 calls, budget 125/440
+2026-11-16 21:56:35 [dev 66/89] F04 agent: pass, 3 calls, budget 128/440
+2026-11-16 21:56:37 [dev 67/89] C01 baseline: pass, 1 calls, budget 129/440
+2026-11-16 21:58:05 [dev 67/89] C01 agent: fail (missed_clarification), 9 calls, budget 138/440
+2026-11-16 21:58:07 [dev 68/89] C02 baseline: pass, 1 calls, budget 139/440
+2026-11-16 21:59:04 [dev 68/89] C02 agent: fail (missed_clarification), 6 calls, budget 145/440
+2026-11-16 21:59:06 [dev 69/89] C03 baseline: pass, 1 calls, budget 146/440
+2026-11-16 21:59:13 [dev 69/89] C03 agent: pass, 2 calls, budget 148/440
+2026-11-16 21:59:18 [dev 70/89] C04 baseline: fail (missed_clarification), 1 calls, budget 149/440
+2026-11-16 22:01:06 [dev 70/89] C04 agent: fail (error), 4 calls, budget 153/440
+2026-11-16 22:01:12 [dev 71/89] C05 baseline: fail (missed_clarification), 1 calls, budget 154/440
+2026-11-16 22:01:28 [dev 71/89] C05 agent: fail (missed_clarification), 7 calls, budget 161/440
+2026-11-16 22:01:31 [dev 72/89] C06 baseline: pass, 1 calls, budget 162/440
+2026-11-16 22:01:53 [dev 72/89] C06 agent: fail (missed_clarification), 9 calls, budget 171/440
+2026-11-16 22:01:55 [dev 73/89] C07 baseline: pass, 1 calls, budget 172/440
+2026-11-16 22:03:03 [dev 73/89] C07 agent: pass, 3 calls, budget 175/440
+2026-11-16 22:03:05 [dev 74/89] C08 baseline: pass, 1 calls, budget 176/440
+2026-11-16 22:03:08 [dev 74/89] C08 agent: pass, 2 calls, budget 178/440
+2026-11-16 22:03:10 [dev 75/89] R01 baseline: pass, 1 calls, budget 179/440
+2026-11-16 22:03:13 [dev 75/89] R01 agent: pass, 2 calls, budget 181/440
+2026-11-16 22:03:14 [dev 76/89] R02 baseline: pass, 1 calls, budget 182/440
+2026-11-16 22:03:17 [dev 76/89] R02 agent: pass, 2 calls, budget 184/440
+2026-11-16 22:03:19 [dev 77/89] R03 baseline: pass, 1 calls, budget 185/440
+2026-11-16 22:03:23 [dev 77/89] R03 agent: pass, 2 calls, budget 187/440
+2026-11-16 22:03:24 [dev 78/89] R04 baseline: pass, 1 calls, budget 188/440
+2026-11-16 22:03:27 [dev 78/89] R04 agent: pass, 2 calls, budget 190/440
+2026-11-16 22:04:27 [dev 79/89] R05 baseline: pass, 1 calls, budget 191/440
+2026-11-16 22:05:16 [dev 79/89] R05 agent: pass, 2 calls, budget 193/440
+2026-11-16 22:05:18 [dev 80/89] R06 baseline: pass, 1 calls, budget 194/440
+2026-11-16 22:05:24 [dev 80/89] R06 agent: pass, 2 calls, budget 196/440
+2026-11-16 22:05:30 [dev 81/89] R07 baseline: pass, 1 calls, budget 197/440
+2026-11-16 22:05:35 [dev 81/89] R07 agent: pass, 2 calls, budget 199/440
+2026-11-16 22:05:37 [dev 82/89] R08 baseline: pass, 1 calls, budget 200/440
+2026-11-16 22:05:41 [dev 82/89] R08 agent: pass, 2 calls, budget 202/440
+2026-11-16 22:05:43 [dev 83/89] R09 baseline: pass, 1 calls, budget 203/440
+2026-11-16 22:05:49 [dev 83/89] R09 agent: pass, 2 calls, budget 205/440
+2026-11-16 22:05:51 [dev 84/89] I01 baseline: pass, 1 calls, budget 206/440
+2026-11-16 22:07:02 [dev 84/89] I01 agent: pass, 4 calls, budget 210/440
+2026-11-16 22:07:05 [dev 85/89] I02 baseline: pass, 1 calls, budget 211/440
+2026-11-16 22:07:33 [dev 85/89] I02 agent: pass, 8 calls, budget 219/440
+2026-11-16 22:07:35 [dev 86/89] I03 baseline: pass, 1 calls, budget 220/440
+2026-11-16 22:08:02 [dev 86/89] I03 agent: pass, 7 calls, budget 227/440
+2026-11-16 22:08:03 [dev 87/89] I04 baseline: pass, 1 calls, budget 228/440
+2026-11-16 22:09:34 [dev 87/89] I04 agent: pass, 4 calls, budget 232/440
+2026-11-16 22:09:36 [dev 88/89] I05 baseline: fail (false_refusal), 1 calls, budget 233/440
+2026-11-16 22:09:41 [dev 88/89] I05 agent: fail (false_refusal), 2 calls, budget 235/440
+2026-11-16 22:09:42 [dev 89/89] I06 baseline: pass, 1 calls, budget 236/440
+2026-11-16 22:09:51 [dev 89/89] I06 agent: pass, 5 calls, budget 241/440
+2026-11-16 22:09:51 dev finished: gemini-3.5-flash-lite
+2026-11-16 22:09:53 [heldout 1/25] H01 baseline: pass, 1 calls, budget 242/440
+2026-11-16 22:10:00 [heldout 1/25] H01 agent: pass, 4 calls, budget 246/440
+2026-11-16 22:11:00 [heldout 2/25] H02 baseline: pass, 1 calls, budget 247/440
+2026-11-16 22:11:15 [heldout 2/25] H02 agent: pass, 4 calls, budget 251/440
+2026-11-16 22:11:17 [heldout 3/25] H03 baseline: pass, 1 calls, budget 252/440
+2026-11-16 22:11:35 [heldout 3/25] H03 agent: fail (wrong_result), 5 calls, budget 257/440
+2026-11-16 22:11:38 [heldout 4/25] H04 baseline: pass, 1 calls, budget 258/440
+2026-11-16 22:11:46 [heldout 4/25] H04 agent: pass, 4 calls, budget 262/440
+2026-11-16 22:11:53 [heldout 5/25] H05 baseline: pass, 1 calls, budget 263/440
+2026-11-16 22:13:02 [heldout 5/25] H05 agent: pass, 6 calls, budget 269/440
+2026-11-16 22:13:03 [heldout 6/25] H06 baseline: pass, 1 calls, budget 270/440
+2026-11-16 22:13:29 [heldout 6/25] H06 agent: pass, 5 calls, budget 275/440
+2026-11-16 22:13:31 [heldout 7/25] H07 baseline: pass, 1 calls, budget 276/440
+2026-11-16 22:13:48 [heldout 7/25] H07 agent: pass, 6 calls, budget 282/440
+2026-11-16 22:13:50 [heldout 8/25] H08 baseline: pass, 1 calls, budget 283/440
+2026-11-16 22:13:54 [heldout 8/25] H08 agent: pass, 3 calls, budget 286/440
+2026-11-16 22:13:56 [heldout 9/25] H09 baseline: pass, 1 calls, budget 287/440
+2026-11-16 22:15:12 [heldout 9/25] H09 agent: pass, 3 calls, budget 290/440
+2026-11-16 22:15:14 [heldout 10/25] H10 baseline: pass, 1 calls, budget 291/440
+2026-11-16 22:15:35 [heldout 10/25] H10 agent: pass, 9 calls, budget 300/440
+2026-11-16 22:15:37 [heldout 11/25] H11 baseline: pass, 1 calls, budget 301/440
+2026-11-16 22:15:41 [heldout 11/25] H11 agent: pass, 3 calls, budget 304/440
+2026-11-16 22:15:46 [heldout 12/25] H12 baseline: pass, 1 calls, budget 305/440
+2026-11-16 22:15:54 [heldout 12/25] H12 agent: pass, 5 calls, budget 310/440
+2026-11-16 22:15:56 [heldout 13/25] H13 baseline: pass, 1 calls, budget 311/440
+2026-11-16 22:16:54 [heldout 13/25] H13 agent: fail (wrong_result), 8 calls, budget 319/440
+2026-11-16 22:16:56 [heldout 14/25] H14 baseline: fail (wrong_result), 1 calls, budget 320/440
+2026-11-16 22:17:02 [heldout 14/25] H14 agent: fail (wrong_result), 5 calls, budget 325/440
+2026-11-16 22:18:01 [heldout 15/25] H15 baseline: pass, 1 calls, budget 326/440
+2026-11-16 22:19:02 [heldout 15/25] H15 agent: pass, 3 calls, budget 329/440
+2026-11-16 22:39:02 H16 baseline: no result in 20 min
+2026-11-16 22:39:02 the provider stopped answering; waiting for the quota reset at 2026-11-17 12:05 +04
+2026-11-17 00:08:24 C04 agent: Gemini 503 (high demand) was scored as an error; record removed under the provider-error policy, re-runs after the reset
+2026-11-17 18:39:40 [dev 70/89] C04 agent: fail (missed_clarification), 16 calls, budget 16/440
+2026-11-17 18:39:40 dev finished: gemini-3.5-flash-lite
+2026-11-17 18:39:59 [heldout 16/25] H16 baseline: pass, 1 calls, budget 17/440
+2026-11-17 18:44:08 [heldout 16/25] H16 agent: pass, 8 calls, budget 25/440
+2026-11-17 18:44:39 [heldout 17/25] H17 baseline: pass, 1 calls, budget 26/440
+2026-11-17 18:47:55 [heldout 17/25] H17 agent: pass, 10 calls, budget 36/440
+2026-11-17 18:47:58 [heldout 18/25] H18 baseline: pass, 1 calls, budget 37/440
+2026-11-17 18:48:07 [heldout 18/25] H18 agent: pass, 2 calls, budget 39/440
+2026-11-17 18:48:13 [heldout 19/25] H19 baseline: fail (missed_clarification), 1 calls, budget 40/440
+2026-11-17 18:49:23 [heldout 19/25] H19 agent: fail (missed_clarification), 7 calls, budget 47/440
+2026-11-17 18:49:40 [heldout 20/25] H20 baseline: fail (missed_clarification), 1 calls, budget 48/440
+2026-11-17 18:50:32 [heldout 20/25] H20 agent: fail (missed_clarification), 7 calls, budget 55/440
+2026-11-17 18:50:39 [heldout 21/25] H21 baseline: pass, 1 calls, budget 56/440
+2026-11-17 18:50:53 [heldout 21/25] H21 agent: pass, 2 calls, budget 58/440
+2026-11-17 18:51:01 [heldout 22/25] H22 baseline: pass, 1 calls, budget 59/440
+2026-11-17 18:51:21 [heldout 22/25] H22 agent: pass, 2 calls, budget 61/440
+2026-11-17 18:51:29 [heldout 23/25] H23 baseline: pass, 1 calls, budget 62/440
+2026-11-17 18:51:50 [heldout 23/25] H23 agent: pass, 2 calls, budget 64/440
+2026-11-17 18:51:59 [heldout 24/25] H24 baseline: pass, 1 calls, budget 65/440
+2026-11-17 18:53:26 [heldout 24/25] H24 agent: pass, 9 calls, budget 74/440
+2026-11-17 18:53:28 [heldout 25/25] H25 baseline: pass, 1 calls, budget 75/440
+2026-11-17 18:54:14 [heldout 25/25] H25 agent: pass, 5 calls, budget 80/440
+2026-11-17 18:54:14 heldout finished: heldout-gemini-3.5-flash-lite
+2026-11-17 18:54:14 all done

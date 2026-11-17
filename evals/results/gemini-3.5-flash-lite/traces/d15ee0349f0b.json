@@ -1,0 +1,163 @@
+{
+ "summary": {
+  "run_id": "d15ee0349f0b",
+  "created": 1794852205.0485718,
+  "question": "What's the weather in S\u00e3o Paulo today?",
+  "message": "What's the weather in S\u00e3o Paulo today?",
+  "session_id": "746e8959f55a",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "status": "refused",
+  "steps": 1,
+  "total_tokens": 4017,
+  "cost_usd": 0.001476,
+  "latency_ms": 1919,
+  "eval_item": "R04"
+ },
+ "events": [
+  {
+   "type": "run_started",
+   "run_id": "d15ee0349f0b",
+   "ts": 1794852205.0485718,
+   "step": null,
+   "data": {
+    "message": "What's the weather in S\u00e3o Paulo today?",
+    "question": "What's the weather in S\u00e3o Paulo today?",
+    "session_id": "746e8959f55a",
+    "provider": "gemini",
+    "model": "gemini-3.5-flash-lite",
+    "tools": [
+     "list_tables",
+     "describe_table",
+     "sample_rows",
+     "run_sql",
+     "run_python",
+     "make_chart",
+     "ask_user",
+     "final_answer"
+    ]
+   }
+  },
+  {
+   "type": "llm_call",
+   "run_id": "d15ee0349f0b",
+   "ts": 1794852205.953674,
+   "step": null,
+   "data": {
+    "purpose": "plan",
+    "model": "gemini-3.5-flash-lite",
+    "input_tokens": 824,
+    "output_tokens": 26,
+    "thinking_tokens": 0,
+    "latency_ms": 905,
+    "retries": 0,
+    "cost_usd": 0.000312
+   }
+  },
+  {
+   "type": "plan",
+   "run_id": "d15ee0349f0b",
+   "ts": 1794852205.9539242,
+   "step": null,
+   "data": {
+    "steps": [
+     "Refuse the request as it is out of scope for the data warehouse (weather data is not available)."
+    ]
+   }
+  },
+  {
+   "type": "llm_call",
+   "run_id": "d15ee0349f0b",
+   "ts": 1794852206.9664571,
+   "step": 1,
+   "data": {
+    "purpose": "act",
+    "model": "gemini-3.5-flash-lite",
+    "input_tokens": 3070,
+    "output_tokens": 44,
+    "thinking_tokens": 53,
+    "latency_ms": 1007,
+    "retries": 0,
+    "cost_usd": 0.001164
+   }
+  },
+  {
+   "type": "tool_call",
+   "run_id": "d15ee0349f0b",
+   "ts": 1794852206.966544,
+   "step": 1,
+   "data": {
+    "call_id": "call_1936503430622291897",
+    "tool": "final_answer",
+    "args": {
+     "answer": "I am unable to provide weather information as weather data is outside the scope of this e-commerce data warehouse.",
+     "status": "refused"
+    }
+   }
+  },
+  {
+   "type": "tool_result",
+   "run_id": "d15ee0349f0b",
+   "ts": 1794852206.9668999,
+   "step": 1,
+   "data": {
+    "call_id": "call_1936503430622291897",
+    "tool": "final_answer",
+    "ok": true,
+    "content": "Answer delivered.",
+    "error": null,
+    "data": {
+     "status": "refused",
+     "answer": "I am unable to provide weather information as weather data is outside the scope of this e-commerce data warehouse.",
+     "citations": [],
+     "result_query_id": null,
+     "chart_ids": [],
+     "caveats": [],
+     "unverified": []
+    },
+    "latency_ms": 0.3
+   }
+  },
+  {
+   "type": "final",
+   "run_id": "d15ee0349f0b",
+   "ts": 1794852206.967068,
+   "step": 1,
+   "data": {
+    "status": "refused",
+    "answer": "I am unable to provide weather information as weather data is outside the scope of this e-commerce data warehouse.",
+    "citations": [],
+    "result_query_id": null,
+    "chart_ids": [],
+    "caveats": [],
+    "unverified": [],
+    "sources": {},
+    "charts": []
+   }
+  },
+  {
+   "type": "run_finished",
+   "run_id": "d15ee0349f0b",
+   "ts": 1794852206.967206,
+   "step": 1,
+   "data": {
+    "status": "refused",
+    "steps": 1,
+    "llm_calls": 2,
+    "usage": {
+     "input_tokens": 3894,
+     "output_tokens": 70,
+     "thinking_tokens": 53
+    },
+    "total_tokens": 4017,
+    "cost_usd": 0.001476,
+    "latency_ms": 1919,
+    "recovered": false,
+    "had_failure": false,
+    "queries": {},
+    "python_runs": {},
+    "charts": {}
+   }
+  }
+ ]
+}
